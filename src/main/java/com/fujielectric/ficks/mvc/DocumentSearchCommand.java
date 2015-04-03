@@ -112,7 +112,11 @@ public class DocumentSearchCommand {
 
         if (keyword != null && !"".equals(keyword)) {
             log.info("keyword: {}", keyword);
-            criteria = criteria.and(new Criteria("text").contains(keyword));
+            criteria = criteria.and(new Criteria("content").contains(keyword)
+                    .or(new Criteria("resourcename").contains(keyword))
+                    .or(new Criteria("doc_description").contains(keyword))
+                    .or(new Criteria("doc_customer_name").contains(keyword))
+                    .or(new Criteria("doc_author_name").contains(keyword)));
         }
 
         log.info("searchCriteria = {}", criteria);

@@ -1,24 +1,20 @@
 package com.fujielectric.ficks.mvc;
 
 import com.fujielectric.ficks.domain.Document;
-import com.fujielectric.ficks.solr.SolrDocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrOperations;
-import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.Criteria;
 import org.springframework.data.solr.core.query.Query;
 import org.springframework.data.solr.core.query.SimpleQuery;
 
-import org.springframework.data.solr.core.query.result.Cursor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -31,20 +27,11 @@ public class DocumentController {
     private Logger log = LoggerFactory.getLogger(DocumentController.class);
 
     @Autowired
-    private SolrDocumentRepository documentRepository;
-
-    @Autowired
     private SolrOperations solrTemplate;
-
-//    @Autowired
-//    private Map<String, String> categories;
-
 
     @RequestMapping(method=GET)
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("index");
-//        List<Document> docs = new ArrayList<>();
-//        documentRepository.findAll().forEach(d -> docs.add(d));
 
         Query query = new SimpleQuery(new Criteria("id").isNotNull());
         query.addSort(sortByPublishedDate());
@@ -52,7 +39,6 @@ public class DocumentController {
 
         List<Document> docs = resultPage.getContent();
 
-//        return docs;
         mav.addObject("categories", categories());
         mav.addObject("areas", areas());
         mav.addObject("purposes", purposes());
@@ -60,7 +46,7 @@ public class DocumentController {
         mav.addObject("reasons", reasons());
 
         mav.addObject("command", new DocumentSearchCommand());
-        mav.addObject("list", docs);
+        mav.addObject("list", resultPage);
         return mav;
     }
 
@@ -68,13 +54,8 @@ public class DocumentController {
     public ModelAndView search(DocumentSearchCommand command) {
         ModelAndView mav = new ModelAndView("index");
 
-        //List<Document> docs = documentRepository.findByTextContaining(searchCommand.keyword);
-//        List<Document> docs = documentRepository.query(command.purpose, command.areaCommand());
-//        List<Document> docs = documentRepository.query(command.purpose, Integer.parseInt(command.area));
-
         Query query = new SimpleQuery(command.searchCriteria());
         query.addSort(sortByPublishedDate());
-//solrTemplate.queryForCursor(query, Document.class);
 
         Page resultPage = solrTemplate.queryForPage(query, Document.class);
 
@@ -86,9 +67,8 @@ public class DocumentController {
         mav.addObject("results", results());
         mav.addObject("reasons", reasons());
 
-
         mav.addObject("command", command);
-        mav.addObject("list", docs);
+        mav.addObject("list", resultPage);
         return mav;
     }
 

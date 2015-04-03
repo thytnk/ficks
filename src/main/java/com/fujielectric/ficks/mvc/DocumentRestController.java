@@ -40,28 +40,22 @@ public class DocumentRestController {
         params.keySet().forEach(k -> log.info("{} = {}", k, params.get(k)));
         String text = params.get("text");
 
-        if (text != null && !text.isEmpty()) {
-            log.info("text:{}", text);
-            return documentRepository.findByText(text);
-        } else {
+//        if (text != null && !text.isEmpty()) {
+  //          log.info("text:{}", text);
+    //        return documentRepository.findByText(text);
+      //  } else {
             List<Document> docs = new ArrayList<>();
             documentRepository.findAll().forEach(d -> docs.add(d));
             return docs;
-        }
+        //}
     }
 
 //    @RequestMapping(value="/{category}",method=GET)
     public List<Document> getByCategory(@PathVariable("category") String category) {
         log.info("getByCategory category={}", category);
 //        List<Document> docs = documentRepository.findByCategory(category);
-        List<Document> docs = documentRepository.findByText(category);
-        docs.forEach(d -> log.info("category={}",d.category));
+        List<Document> docs = null;
+        //docs.forEach(d -> log.info("category={}",d.category));
         return docs;
     }
-
-//    @RequestMapping("/{q}")
-    public List<Document> getByText(@PathVariable("q") String q) {
-        return documentRepository.findByText(q);
-    }
-
 }

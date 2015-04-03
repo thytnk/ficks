@@ -22,7 +22,7 @@ public interface SolrDocumentRepository extends SolrCrudRepository<Document, Str
     FacetPage<Document> findByNameAndFacetOnCategory(String name, Pageable page);
     */
 
-    List<Document> findByText(String text);
+    //List<Document> findByText(String text);
 //    List<Document> findByCategoryAndText(String category, String text);
 //    @Query("doc_category:?0")
 //    List<Document> findByCategory(String category);

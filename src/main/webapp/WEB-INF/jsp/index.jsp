@@ -122,8 +122,9 @@
 
 <div class="container">
     <ul id="documents">
+    <li>検索結果:<c:out value="${list.totalElements}"/>件</li>
 
-<c:forEach var="doc" items="${list}">
+<c:forEach var="doc" items="${list.content}">
     <li>
     <ul>
         <li class="doc_code">

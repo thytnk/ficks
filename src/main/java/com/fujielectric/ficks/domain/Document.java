@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@SuppressWarnings("")
 public class Document {
 
     @Id @Indexed @Field
@@ -72,13 +71,13 @@ public class Document {
 
     @Indexed @Field("last_modified")
     public String lastModified;
-
+/*
     @Indexed @Field
     public String name;
 
     @Indexed
     public String text;
-
+*/
     public String getFileName() {
         File f = new File(resourceName);
         return f.getName();
