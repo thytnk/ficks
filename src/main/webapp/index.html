@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>FICKS: FSL Intranet Community Knowledge management System</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/screen.css">
+    <!--[if lt IE 9]>
+    <script src="//cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="js/lib/jquery-1.11.2.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<header>
+    <h1><img src="img/logo.jpg" alt="FICKS:"> FSL Intranet Community Knowledge management System</h1>
+</header>
+
+<div id="main">
+<form id="search" action="#">
+
+    <div id="categories">
+        <label>提案資料<input type="checkbox" name="search_category"></label>
+        <label>技術資料<input type="checkbox" name="search_category"></label>
+        <label>設定資料<input type="checkbox" name="search_category"></label>
+        <label>手順資料<input type="checkbox" name="search_category"></label>
+        <label>業務窓口<input type="checkbox" name="search_category"></label>
+    </div>
+
+    <hr>
+
+    <p>
+        <label for="search_area">分野</label>
+        <select id="search_area">
+            <option value="小学校">小学校</option>
+            <option value="中学校">中学校</option>
+            <option value="高校">高校</option>
+            <option value="大学">大学</option>
+            <option value="公共">公共</option>
+            <option value="金融">金融</option>
+            <option value="産業">産業</option>
+            <option value="その他">その他</option>
+        </select>
+    </p>
+    <p>
+        <label for="search_purpose">ドキュメント種類</label>
+        <select id="search_purpose">
+            <option value="提案書">提案書</option>
+            <option value="技術書">技術書</option>
+            <option value="設定書">設定書</option>
+            <option value="マニュアル">マニュアル</option>
+            <option value="仕様書">仕様書</option>
+            <option value="事例集">事例集</option>
+            <option value="手順書">手順書</option>
+            <option value="その他">その他</option>
+        </select>
+    </p>
+    <p>
+        <label for="search_customer">顧客名</label>
+        <input type="text" id="search_customer">
+    </p>
+    <p>
+        <label for="search_author">担当者</label>
+        <input type="text" id="search_author">
+    </p>
+    <p>
+        <label for="search_result">成否</label>
+        <select id="search_result">
+            <option>成功</option>
+            <option>失敗</option>
+            <option value="">なし</option>
+        </select>
+    </p>
+    <p>
+        <label for="search_reason">成否要因</label>
+        <select id="search_reason">
+            <option value="価格">価格</option>
+            <option value="顧客要件">顧客要件</option>
+            <option value="プレゼン力">プレゼン力</option>
+            <option value="機能・性能">機能・性能</option>
+            <option value="サービス品質">サービス品質</option>
+            <option value="差別化">差別化</option>
+            <option value="政治的判断">政治的判断</option>
+            <option value="総合的判断">総合的判断</option>
+        </select>
+    </p>
+    <p>
+        <label for="search_published_from">発行日または期間</label>
+        <input type="date" id="search_published_from">～<input type="date" id="search_published_to">
+    </p>
+    <p>
+        <label for="search_keyword">キーワード</label>
+        <input type="search" id="search_keyword">
+    </p>
+
+    <p><button type="button" id="searchButton">検索</button></p>
+</form>
+
+<hr>
+
+<div class="container">
+    <ul id="documents">
+
+    </ul>
+</div>
+
+<aside><iframe src="" frameborder="0"></iframe></aside>
+
+<footer><iframe src="" frameborder="0"></iframe></footer>
+
+</div>
+
+<script type="text/template" id="tmpl-docview">
+    <ul>
+        <li class="doc_code">
+            <p class="caption">管理番号:</p>
+            <p>A00000-00</p>
+        </li>
+
+        <li class="doc_filename">
+            <p class="caption">ドキュメント名:</p>
+            <p class="doc_filename"><%= fileName %></p>
+        </li>
+
+        <li class="doc_category">
+            <p class="caption">種別:</p>
+            <p><%= category %></p>
+        </li>
+
+        <li class="doc_purpose">
+            <p class="caption">ドキュメント種類:</p>
+            <p><%= purpose %></p>
+        </li>
+
+        <li class="doc_customer_name">
+            <p class="caption">顧客名:</p>
+            <p><%= customerName %></p>
+        </li>
+
+        <li class="doc_author_name">
+            <p class="caption">担当者:</p>
+            <p><%= authorName %></p>
+        </li>
+
+        <li class="doc_result">
+            <p class="caption">成否:</p>
+            <p><%= result %></p>
+        </li>
+
+        <li class="doc_comment">
+            <p class="caption">コメント:</p>
+            <p><%= description %></p>
+        </li>
+
+        <li class="doc_thumbnail">
+            <a href="download?file=<%= id%>"><img src="#" alt="NO IMAGE"></a>
+        </li>
+        <!--<p><a href="#" class="delete">delete</a></p>-->
+    </ul>
+    <hr>
+</script>
+
+<script src="js/lib/json2.js"></script>
+<script src="js/lib/underscore-min.js"></script>
+<script src="js/lib/backbone-min.js"></script>
+<script src="js/models/Document.js"></script>
+<script src="js/collections/Documents.js"></script>
+<script src="js/views/DocumentView.js"></script>
+<script src="js/views/DocumentsView.js"></script>
+<script src="js/views/AppView.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
