@@ -79,8 +79,11 @@ public class Document {
     public String text;
 */
     public String getFileName() {
-        File f = new File(resourceName);
-        return f.getName();
+        if (resourceName != null) {
+            File f = new File(resourceName);
+            return f.getName();
+        }
+        return "";
     }
 
 
