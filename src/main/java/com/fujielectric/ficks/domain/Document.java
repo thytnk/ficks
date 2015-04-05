@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.Indexed;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
@@ -80,8 +81,9 @@ public class Document {
 */
     public String getFileName() {
         if (resourceName != null) {
-            File f = new File(resourceName);
-            return f.getName();
+            return Paths.get(resourceName).getFileName().toString();
+        } else if (id != null) {
+            return Paths.get(id).getFileName().toString();
         }
         return "";
     }

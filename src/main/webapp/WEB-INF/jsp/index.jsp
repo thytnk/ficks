@@ -26,21 +26,22 @@
 </head>
 <body>
 <div class="container">
-<div id="header">
-  <h1><a href="/documents"><img src="/img/FICKS.png" alt="FICKS:"></a> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem</h1>
+<div id="header" class="navbar navbar-default navbar-fixed-top">
+  <div class="navbar-header">
+    <a href="/documents" class="navbar-brand"><img src="/img/FICKS.png" alt="FICKS:"></a>
+    <h1 class="navbar-text"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem</h1>
+  </div>
 </div>
 
-<hr>
-
-<div class="row">
+<div class="row small">
   <form:form id="search" action="/documents/search" method="GET">
   
     <div id="categories" class="row container btn-group">
-      <label class="col-sm-1 btn btn-primary">提案資料<form:checkbox path="category" value="A" class="hidden"/></label>
-      <label class="col-sm-1 btn btn-success">技術資料<form:checkbox path="category" value="B" class="hidden"/></label>
-      <label class="col-sm-1 btn btn-info">設定資料<form:checkbox path="category" value="C" class="hidden"/></label>
-      <label class="col-sm-1 btn btn-warning">手順資料<form:checkbox path="category" value="D" class="hidden"/></label>
-      <label class="col-sm-1 btn btn-danger">業務窓口<form:checkbox path="category" value="E" class="hidden"/></label>
+      <label class="col-sm-1 btn btn-category-A">提案資料<form:checkbox path="category" value="A" class="hidden"/></label>
+      <label class="col-sm-1 btn btn-category-B">技術資料<form:checkbox path="category" value="B" class="hidden"/></label>
+      <label class="col-sm-1 btn btn-category-C">設定資料<form:checkbox path="category" value="C" class="hidden"/></label>
+      <label class="col-sm-1 btn btn-category-D">手順資料<form:checkbox path="category" value="D" class="hidden"/></label>
+      <label class="col-sm-1 btn btn-category-E">業務窓口<form:checkbox path="category" value="E" class="hidden"/></label>
     </div>
   
     <div class="row">
@@ -142,9 +143,9 @@
 
 <div class="row">
 
-  <div class="col-sm-2"><iframe src=""></iframe></div>
+  <div class="col-sm-2 col-xm-hidden"><iframe src=""></iframe></div>
 
-  <div class="col-sm-10">
+  <div class="col-sm-10 ">
     <div class="alert alert-info">
       検索結果:<c:out value="${list.totalElements}"/>件
     </div>
@@ -153,68 +154,47 @@
 
       <c:forEach var="doc" items="${list.content}">
       <li class="list-group-item row">
-        <ul>
-          <li class="doc_code">
-            <p class="caption">管理番号:</p>
-            <p><c:out value="${doc.code}"/></p>
-          </li>
-  
-          <li class="doc_filename">
-            <p class="caption">ドキュメント名:</p>
-            <p class="doc_filename"><c:out value="${doc.fileName}"/></p>
-          </li>
-  
-          <li class="doc_published_date">
-            <p class="caption">発行日:</p>
-            <p class="doc_published_date"><fmt:formatDate value="${doc.publishedDate}"/></p>
-          </li>
-  
-          <li class="doc_category">
-            <p class="caption">種別:</p>
-            <p><c:out value="${categories[doc.category]}"/></p>
-          </li>
-  
-          <li class="doc_area">
-            <p class="caption">分野:</p>
-            <p><c:out value="${areas[doc.area]}"/></p>
-          </li>
-          <li class="doc_purpose">
-            <p class="caption">ドキュメント種類:</p>
-            <p><c:out value="${purposes[doc.purpose]}"/></p>
-          </li>
-  
-          <li class="doc_customer_name">
-            <p class="caption">顧客名:</p>
-            <p><c:out value="${doc.customerName}"/></p>
-          </li>
-  
-          <li class="doc_author_name">
-            <p class="caption">担当者:</p>
-            <p><c:out value="${doc.authorName}"/></p>
-          </li>
-  
-          <li class="doc_result">
-            <p class="caption">成否:</p>
-            <p><c:out value="${results[doc.result]} (${reasons[doc.reason]})"/></p>
-          </li>
-  
-          <li class="doc_comment">
-            <p class="caption">コメント:</p>
-            <p><c:out value="${doc.description}"/></p>
-          </li>
-  
-          <li class="doc_thumbnail">
+          <div class="row">
+            <p class="col-sm-9">
+              <b><c:out value="${doc.code}"/>:</b><c:out value="${doc.fileName}"/>
+            </p>
+            <p class="col-sm-3 doc_author">
+              <c:out value="${doc.authorName}"/>・<fmt:formatDate value="${doc.publishedDate}"/>
+            </p>
+          </div>      
+        <div class="row">
+          <div class="col-sm-9">
+            <div class="row">
+              <p class="col-sm-7">
+                <span class="label label-category-${doc.category}"><c:out value="${categories[doc.category]}"/></span> 
+                <c:out value="${areas[doc.area]}"/> /
+                <c:out value="${purposes[doc.purpose]}"/> /
+                <c:out value="${results[doc.result]} （${reasons[doc.reason]}）"/>
+              </p>
+            </div>
+            <div class="row">
+              <p class="col-sm-12">
+              <label class="caption">顧客名: </label><c:out value="${doc.customerName}"/>
+              </p>
+            </div>
+            <div class="row small">
+              <p class="col-sm-12"><c:out value="${doc.description}"/></p>
+            </div>
+          </div>
+          <div class="col-sm-3">  
+            <div class="doc_thumbnail">
             <a href="download?file=<c:out value="${doc.id}"/>"><img src="#" alt="NO IMAGE" class="img-thumbnail"></a>
-          </li>
-        </ul>
+            </div>
+          </div>
+        </div>
       </li>
       </c:forEach>
     </ul>
   </div>
 </div>
 
-<div id="footer" class="row">
-  <iframe src=""></iframe>
+<div id="footer" class="navbar navbar-default navbar-fixed-bottom">
+  <!--<iframe src=""></iframe>-->
 </div>
 </div>
 
