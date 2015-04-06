@@ -47,6 +47,7 @@ public class DocumentController {
 
         mav.addObject("command", new DocumentSearchCommand());
         mav.addObject("list", resultPage);
+        mav.addObject("mode", "new");
         return mav;
     }
 
@@ -69,6 +70,7 @@ public class DocumentController {
 
         mav.addObject("command", command);
         mav.addObject("list", resultPage);
+        mav.addObject("mode", "search");
         return mav;
     }
 
