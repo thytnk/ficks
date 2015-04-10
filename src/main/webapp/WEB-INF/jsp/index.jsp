@@ -26,28 +26,58 @@
 </head>
 <body>
 
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="/documents" class="navbar-brand"><img src="/img/FICKS.png" alt="FICKS:"></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <h1 class="navbar-text"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem</h1>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/documents" class="glyphicon glyphicon-home" aria-hidden="true"> HOME</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!--
 <div id="header" class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
   <div class="navbar-header">
-    <a href="/documents" class="navbar-brand"><img src="/img/FICKS.png" alt="FICKS:"></a>
-    <h1 class="navbar-text"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem</h1>
+
+    <a href="/documents" class="navbar-brand"><img src="/img/FICKS.png" alt="FICKS:"></a></div>
+
   </div>
-    <div class="navbar-text pull-right">
-      <a href="/documents" class="glyphicon glyphicon-home" aria-hidden="true"> HOME</a>
-      <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-    </div>
+  <div id="navbar" class="navbar-collapse collapse">
+  <h1 class="navbar-text col-xs-hidden"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem</h1>
+  </div>
+  </div>
+      <div class="nav navbar-nav navbar-right">
+        <a href="/documents" class="glyphicon glyphicon-home" aria-hidden="true"> HOME</a>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </div>
+
 </div>
+-->
 <div class="container">
 <div class="row small">
   <form:form id="search" action="/documents/search" method="GET">
-  
-    <div id="categories" class="row container btn-group">
-      <label class="col-sm-1 btn btn-category-A">提案資料<form:checkbox path="category" value="A" class="hidden"/></label>
-      <label class="col-sm-1 btn btn-category-B">技術資料<form:checkbox path="category" value="B" class="hidden"/></label>
-      <label class="col-sm-1 btn btn-category-C">設定資料<form:checkbox path="category" value="C" class="hidden"/></label>
-      <label class="col-sm-1 btn btn-category-D">手順資料<form:checkbox path="category" value="D" class="hidden"/></label>
-      <label class="col-sm-1 btn btn-category-E">業務窓口<form:checkbox path="category" value="E" class="hidden"/></label>
+
+    <div id="categories" class="row container">
+      <div class="col-sm-8 row btn-group">
+      <label class="col-sm-2 btn btn-category-A"><form:checkbox path="category" value="A"/> 提案資料</label>
+      <label class="col-sm-2 btn btn-category-B"><form:checkbox path="category" value="B"/> 技術資料</label>
+      <label class="col-sm-2 btn btn-category-C"><form:checkbox path="category" value="C"/> 設定資料</label>
+      <label class="col-sm-2 btn btn-category-D"><form:checkbox path="category" value="D"/> 手順資料</label>
+      <label class="col-sm-2 btn btn-category-E"><form:checkbox path="category" value="E"/> 業務窓口</label>
+      </div>
     </div>
-  
+
     <div class="row">
       <p class="col-sm-2 form-group">
         <label class="control-label" for="search_area">分野</label>
@@ -147,7 +177,7 @@
 
 <div class="row">
 
-  <div class="col-sm-2 col-xm-hidden"><iframe src=""></iframe></div>
+  <div class="col-sm-2 col-xs-hidden"><iframe src="/link.html"></iframe></div>
 
   <div class="col-sm-10 ">
     <c:choose>
@@ -166,34 +196,39 @@
       <li class="list-group-item row">
           <div class="row">
             <p class="col-sm-9">
-              <b><c:out value="${doc.code}"/>:</b><c:out value="${doc.fileName}"/>
+              <b title="文書コード"><c:out value="${doc.code}"/>:</b><span title="ファイル名"><c:out value="${doc.fileName}"/></span>
             </p>
             <p class="col-sm-3">
-              <c:out value="${doc.authorName}"/>・<fmt:formatDate value="${doc.publishedDate}"/>
+              <span title="担当者"><c:out value="${doc.authorName}"/></span>・<span title="発行日"><fmt:formatDate value="${doc.publishedDate}"/></span>
             </p>
           </div>
         <div class="row">
           <div class="col-sm-9">
             <div class="row">
-              <p class="col-sm-7">
+              <p class="col-sm-12">
                 <span class="label label-category-${doc.category}"><c:out value="${categories[doc.category]}"/></span>
-                <c:out value="${areas[doc.area]}"/> /
-                <c:out value="${purposes[doc.purpose]}"/> /
-                <c:out value="${results[doc.result]} （${reasons[doc.reason]}）"/>
+                <span title="分野"><c:out value="${areas[doc.area]}"/></span> /
+                <span title="ドキュメント種類"><c:out value="${purposes[doc.purpose]}"/></span> /
+                <span title="成否"><c:out value="${results[doc.result]}"/><span>
+                <c:if test="${doc.reason != null}"><span title="成否要因">（<c:out value="${reasons[doc.reason]}"/>）</span></c:if>
               </p>
             </div>
+            <c:if test="${doc.customerName != null}">
             <div class="row">
-              <p class="col-sm-12">
+              <p class="col-sm-12" title="顧客名">
               <label>顧客名: </label><c:out value="${doc.customerName}"/>
               </p>
             </div>
-            <div class="row small">
-              <p class="col-sm-12"><c:out value="${doc.description}"/></p>
+            </c:if>
+            <c:if test="${doc.description != null}">
+            <div class="row small" title="コメント">
+              <p class="col-sm-12"><pre><c:out value="${doc.description}"/></pre></p>
             </div>
+            </c:if>
           </div>
           <div class="col-sm-3">
             <div class="doc_thumbnail">
-            <a href="download?file=<c:out value="${doc.id}"/>"><img src="/img/thumbnail/${doc.code}.png" alt="NO IMAGE" class="img-thumbnail"></a>
+            <a href="download?file=<c:out value="${doc.id}"/>"><img src="/img/thumbnail/${doc.code}.jpg" alt="NO IMAGE" class="img-thumbnail"></a>
             </div>
           </div>
         </div>
@@ -205,8 +240,6 @@
 </div>
 
 <div id="footer" class="navbar navbar-default navbar-fixed-bottom">
-  <!--<iframe src=""></iframe>-->
-</div>
 </div>
 
 <script src="/js/lib/jquery-1.11.2.min.js"></script>

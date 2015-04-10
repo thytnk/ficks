@@ -36,3 +36,5 @@ com_crashlytics_export_strings.xml
 /build/
 /target/
 gradle.properties
+
+/src/main/webapp/img/thumbnail/*.jpg

@@ -57,7 +57,7 @@ public class DocumentController {
 
         Query query = new SimpleQuery(command.searchCriteria());
         query.addSort(sortByPublishedDate());
-
+        query.setRows(100);
         Page resultPage = solrTemplate.queryForPage(query, Document.class);
 
         List<Document> docs = resultPage.getContent();
