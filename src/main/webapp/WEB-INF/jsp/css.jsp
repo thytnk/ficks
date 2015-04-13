@@ -1,15 +1,10 @@
 @charset utf-8;
 
-h1 {
-  font: italic 1.4em "Times New Roman";
-}
-h2 {
-   font-size: 1.5em;
-}
-.col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5
-{ padding-left: 7px; padding-right: 7px; }
+h1   { font: italic 1.5em "Times New Roman"; }
+h1>b { font-weight:normal; color: red;}
+h2   { font-size: 1.3em; }
 
-h1 b { font-weight:normal; color: red;}
+.form-group { padding-right: 5px;  }
 
 body {
   font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
@@ -19,6 +14,7 @@ body {
 
 pre {
   font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  padding: 5px 10px;
 }
 
 #search {
@@ -28,48 +24,47 @@ pre {
   border: 1px solid palegoldenrod;
 }
 
-li { list-style: none; }
-iframe { height: 100%; width: 100%; border-radius: 5px;}
 
 #categories label {
-    color: white;
-/*    height: 54px;
-    padding-top: 15px;*/
-    text-align: center;
-/*    width: 96px;*/
+  color: white;
+  text-align: center;
   margin-bottom: 10px;
 }
 
-.category-A { background:crimson; }
-/*
-#categories label:nth-child(4n+1) { background:crimson;  }
-#categories label:nth-child(4n+2) { background:darkslateblue; }
-#categories label:nth-child(4n+3) { background:darkorange;}
-#categories label:nth-child(4n+0) { background:limegreen;}
-*/
 #categories label.gray { background: gray; border-color:gray; color:silver;}
 
-/*
-aside>iframe { width: 100%; }
-*/
+#documents label { margin-right: 3px; }
 
 .doc_author { color: gray; }
 
 .doc_thumbnail {
-    background: silver;
-    height: 90px;
-    width: 160px;
-    text-align: center;
+  padding-left : 5px;
+  text-align: center;
 }
 
 .doc_thumbnail a {
-    height: 100%;
-    width: 100%;
+  background: silver;
+  max-height: 135px;
+  width: 100%;
 }
 
 .doc_thumbnail img {
-    max-height: 144px;
-    max-width: 256px;
+  height: 100%;
+  width: 100%;
+}
+
+.glyphicon-download-alt {
+  color: gray;
+  font-size: 50px;
+  position:relative;
+  left: -100px;
+  top: 25px;
+  z-index: 10;
+}
+
+#footer {
+  color: gray;
+  text-align: right;
 }
 
 /*----------------------------------------------------------------------*/

@@ -143,14 +143,14 @@
     <div class="row">
       <div class="col-sm-4">
         <div class="form-group">
-        <label class="control-label" for="search_published_to">発行日または期間</label>
-        <div>
-          <div class="input-group">
-            <form:input type="date" id="search_published_from" path="publishedFrom" class="form-control"/>
-            <span class="input-group-addon">～</span>
-            <form:input type="date" id="search_published_to" path="publishedTo" class="form-control"/>
-          </div>
-        </div>
+          <label class="control-label" for="search_published_to">発行日または期間</label>
+
+            <div class="input-group">
+              <form:input type="text" id="search_published_from" path="publishedFrom" class="form-control"/>
+              <span class="input-group-addon">～</span>
+              <form:input type="text" id="search_published_to" path="publishedTo" class="form-control"/>
+            </div>
+
         </div>
       </div>
 
@@ -166,10 +166,6 @@
       </p>
     </div>
 
-
-    <div class="row">
-    </div>            
-
   </form:form>
 </div>
 
@@ -177,9 +173,9 @@
 
 <div class="row">
 
-  <div class="col-sm-2 col-xs-hidden"><iframe src="/link.html"></iframe></div>
+  <div id="site-link" class="col-sm-2 hidden-xs "><div class="list-group"></div></div>
 
-  <div class="col-sm-10 ">
+  <div class="col-sm-10 col-xs-12">
     <c:choose>
     <c:when test="${mode=='new'}">
     <h2 class="row">新着情報</h2>
@@ -194,16 +190,15 @@
     <ul id="documents" class="list-group">
       <c:forEach var="doc" items="${list.content}">
       <li class="list-group-item row">
-          <div class="row">
-            <p class="col-sm-9">
-              <b title="文書コード"><c:out value="${doc.code}"/>:</b><span title="ファイル名"><c:out value="${doc.fileName}"/></span>
-            </p>
-            <p class="col-sm-3">
-              <span title="担当者"><c:out value="${doc.authorName}"/></span>・<span title="発行日"><fmt:formatDate value="${doc.publishedDate}"/></span>
-            </p>
-          </div>
+      <div class="col-sm-12">
         <div class="row">
           <div class="col-sm-9">
+            <div class="row">
+              <p class="col-sm-12">
+                <label title="文書コード"><c:out value="${doc.code}"/>:</label>
+                <span title="ファイル名"><c:out value="${doc.fileName}"/></span>
+              </p>
+            </div>
             <div class="row">
               <p class="col-sm-12">
                 <span class="label label-category-${doc.category}"><c:out value="${categories[doc.category]}"/></span>
@@ -215,23 +210,27 @@
             </div>
             <c:if test="${doc.customerName != null}">
             <div class="row">
-              <p class="col-sm-12" title="顧客名">
-              <label>顧客名: </label><c:out value="${doc.customerName}"/>
-              </p>
+              <p class="col-sm-12" title="顧客名"><label>顧客名:</label><c:out value="${doc.customerName}"/></p>
             </div>
             </c:if>
             <c:if test="${doc.description != null}">
-            <div class="row small" title="コメント">
-              <p class="col-sm-12"><pre><c:out value="${doc.description}"/></pre></p>
+            <div class="row" title="コメント"><pre class="col-sm-12 small"><c:out value="${doc.description}"/></pre>
             </div>
             </c:if>
           </div>
           <div class="col-sm-3">
-            <div class="doc_thumbnail">
-            <a href="download?file=<c:out value="${doc.id}"/>"><img src="/img/thumbnail/${doc.code}.jpg" alt="NO IMAGE" class="img-thumbnail"></a>
+            <div class="row small doc_author">
+              <span class="col-sm-12" title="担当者・発行日"><c:out value="${doc.authorName}"/>・<fmt:formatDate value="${doc.publishedDate}"/></span>
+            </div>
+            <div class="row small doc_thumbnail">
+              <a class="col-sm-12" href="download?file=<c:out value="${doc.id}"/>" >
+                <img src="/img/thumbnail/${doc.code}.jpg" alt="NO IMAGE" class="img-thumbnail">
+                <!--<span class="glyphicon glyphicon-download-alt"><span>-->
+              </a>
             </div>
           </div>
         </div>
+      </div>
       </li>
 
       </c:forEach>
@@ -239,15 +238,24 @@
   </div>
 </div>
 
-<div id="footer" class="navbar navbar-default navbar-fixed-bottom">
+<div id="footer" class="navbar navbar-default navbar-fixed-bottom container">
 </div>
 
+<script src="/js/lib/modernizr.js"></script>
 <script src="/js/lib/jquery-1.11.2.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script src="/js/lib/bootstrap-datepicker.min.js"></script>
 <script src="/js/lib/bootstrap-datepicker.ja.min.js"></script>
 <script>
 $(function() {
+  $.get("/link.html", function(data) {
+    $("#site-link").html(data);
+  });
+
+  $.get("/footer.html", function(data) {
+    $("#footer").html(data);
+  });
+
   $("#categories input[type='checkbox']").each(function() {
     if (this.checked) {
       $(this).parent().removeClass('gray');
@@ -264,6 +272,7 @@ $(function() {
     }
   });
 
+  //if (!Modernizr.inputtypes.date) {
   $('#search_published_from').datepicker({
     format: 'yyyy/mm/dd',
     language: 'ja'
@@ -273,6 +282,7 @@ $(function() {
     format: 'yyyy/mm/dd',
     language: 'ja'
   });
+  //}
 });
 </script>
 
