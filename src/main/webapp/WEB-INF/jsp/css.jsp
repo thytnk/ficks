@@ -42,24 +42,28 @@ pre {
   text-align: center;
 }
 
-.doc_thumbnail a {
-  background: silver;
-  max-height: 135px;
-  width: 100%;
-}
-
 .doc_thumbnail img {
   height: 100%;
   width: 100%;
 }
 
-.glyphicon-download-alt {
-  color: gray;
-  font-size: 50px;
+.download-link {
   position:relative;
-  left: -100px;
-  top: 25px;
-  z-index: 10;
+  max-height: 135px;
+  width: 100%;
+}
+
+.download-link p {
+  position: absolute;
+  top: 40%;
+  text-align:center;
+  width: 100%;
+  z-index: 10;/*background:yellow;*/
+  color: gray;
+  font-size: 3em;}
+
+  .download-link:hover p {
+  color:red;
 }
 
 #footer {

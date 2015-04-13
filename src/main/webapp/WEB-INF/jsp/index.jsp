@@ -223,9 +223,9 @@
               <span class="col-sm-12" title="担当者・発行日"><c:out value="${doc.authorName}"/>・<fmt:formatDate value="${doc.publishedDate}"/></span>
             </div>
             <div class="row small doc_thumbnail">
-              <a class="col-sm-12" href="download?file=<c:out value="${doc.id}"/>" >
+              <a class="col-sm-12 download-link" href="download?file=<c:out value="${doc.id}"/>">
                 <img src="/img/thumbnail/${doc.code}.jpg" alt="NO IMAGE" class="img-thumbnail">
-                <!--<span class="glyphicon glyphicon-download-alt"><span>-->
+                <p><span class="glyphicon glyphicon-download-alt"></span></p>
               </a>
             </div>
           </div>
