@@ -1,6 +1,6 @@
 @charset utf-8;
 
-h1   { font: italic 1.5em "Times New Roman"; }
+h1   { font: italic 1.5em "Times New Roman" !important; }
 h1>b { font-weight:normal; color: red;}
 h2   { font-size: 1.3em; }
 
@@ -55,16 +55,20 @@ pre {
 
 .download-link p {
   position: absolute;
-  top: 40%;
+  top: 35%;
   text-align:center;
-  width: 100%;
+  width: 85%;
   z-index: 10;/*background:yellow;*/
   color: gray;
-  font-size: 3em;}
-
-  .download-link:hover p {
-  color:red;
+  font-size: 4em;
 }
+
+.download-link:hover p {
+  color:#337ab7;
+
+}
+
+.glyphicon-download-alt { opacity: 0.7; }
 
 #footer {
   color: gray;

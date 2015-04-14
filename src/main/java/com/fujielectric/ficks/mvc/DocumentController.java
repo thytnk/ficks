@@ -1,6 +1,7 @@
 package com.fujielectric.ficks.mvc;
 
 import com.fujielectric.ficks.domain.Document;
+import com.fujielectric.ficks.solr.SolrDocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,13 @@ import org.springframework.data.solr.core.query.Criteria;
 import org.springframework.data.solr.core.query.Query;
 import org.springframework.data.solr.core.query.SimpleQuery;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +29,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping("/documents")
 public class DocumentController {
     private Logger log = LoggerFactory.getLogger(DocumentController.class);
+
+    @Autowired
+    private SolrDocumentRepository documentRepository;
 
     @Autowired
     private SolrOperations solrTemplate;
@@ -72,6 +79,31 @@ public class DocumentController {
         mav.addObject("list", resultPage);
         mav.addObject("mode", "search");
         return mav;
+    }
+
+    @RequestMapping(value="/{code}/download", produces="application/force-download")
+    public void download(HttpServletResponse res, @PathVariable("code")String code) throws IOException {
+        Document doc = documentRepository.findByCode(code);
+        if (doc == null)
+            return;
+
+        File file = new File(doc.id);
+        String dFilename = new String(file.getName().getBytes("Windows-31J"), "ISO-8859-1");
+        res.reset();
+        res.setHeader("Content-Transfer-Encoding", "binary");
+        res.setHeader("Content-Disposition", "attachment; filename=" + dFilename);
+
+        OutputStream os = res.getOutputStream();
+
+        InputStream in = new FileInputStream(file);
+
+        byte[] b = new byte[1024];
+        int len;
+        while((len = in.read(b)) != -1) {
+            os.write(b, 0, len);
+        }
+        in.close();
+        os.close();
     }
 
     private Sort sortByPublishedDate() {

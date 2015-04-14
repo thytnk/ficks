@@ -9,6 +9,8 @@ import org.springframework.data.solr.repository.*;
 import java.util.List;
 
 public interface SolrDocumentRepository extends SolrCrudRepository<Document, String> {
+    Document findByCode(String code);
+
 /*
     Page<Document> findByPopularity(Integer popularity, Pageable page);
 

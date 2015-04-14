@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="shortcut icon" href="/favicon.ico">
   <style><jsp:include page="css.jsp"/></style>
 
   <!--[if lt IE 9]>
@@ -223,7 +223,7 @@
               <span class="col-sm-12" title="担当者・発行日"><c:out value="${doc.authorName}"/>・<fmt:formatDate value="${doc.publishedDate}"/></span>
             </div>
             <div class="row small doc_thumbnail">
-              <a class="col-sm-12 download-link" href="download?file=<c:out value="${doc.id}"/>">
+              <a class="col-sm-12 download-link" href="/documents/<c:out value="${doc.code}"/>/download" title="ダウンロード">
                 <img src="/img/thumbnail/${doc.code}.jpg" alt="NO IMAGE" class="img-thumbnail">
                 <p><span class="glyphicon glyphicon-download-alt"></span></p>
               </a>
@@ -248,11 +248,11 @@
 <script src="/js/lib/bootstrap-datepicker.ja.min.js"></script>
 <script>
 $(function() {
-  $.get("/link.html", function(data) {
+  $.get("/link.jsp?" + Math.random(), function(data) {
     $("#site-link").html(data);
   });
 
-  $.get("/footer.html", function(data) {
+  $.get("/footer.jsp", function(data) {
     $("#footer").html(data);
   });
 
