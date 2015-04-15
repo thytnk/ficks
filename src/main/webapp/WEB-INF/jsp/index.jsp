@@ -35,7 +35,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a href="/documents" class="navbar-brand"><img src="/img/FICKS.png" alt="FICKS:"></a>
+          <a href="/documents" class="navbar-brand"><img src="/img/FICKS1.png?a" alt="FICKS:"></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <h1 class="navbar-text"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem</h1>

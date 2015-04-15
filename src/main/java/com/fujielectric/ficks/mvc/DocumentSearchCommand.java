@@ -66,13 +66,17 @@ public class DocumentSearchCommand {
 
         if (customer != null && !"".equals(customer)) {
             log.info("customer: {}", customer);
-            criteria = criteria.and(new Criteria("doc_customer_name").contains(customer));
+            for (String s : customer.split("\\s")) {
+                criteria = criteria.and(new Criteria("doc_customer_name").contains(s));
+            }
         }
 
         if (author != null && !"".equals(author)) {
             log.info("author: {}", author);
-            criteria = criteria.and(new Criteria("doc_author_name").contains(author)
-                    .or(new Criteria("doc_emp_number").is(author)));
+            for (String s : author.split("\\s")) {
+                criteria = criteria.and(new Criteria("doc_author_name").contains(s)
+                        .or(new Criteria("doc_emp_number").is(s)));
+            }
         }
 
         if (result != null && !"*".equals(result)) {
@@ -111,20 +115,16 @@ public class DocumentSearchCommand {
         }
 
         if (keyword != null && !"".equals(keyword)) {
-            log.info("keyword: {}", keyword);
-/*
-            criteria = criteria.and(new Criteria("content").contains(keyword)
-                    .or(new Criteria("resourcename").contains(keyword))
-                    .or(new Criteria("doc_description").contains(keyword))
-                    .or(new Criteria("doc_customer_name").contains(keyword))
-                    .or(new Criteria("doc_author_name").contains(keyword)));
-*/
-            criteria = criteria.and(new Criteria("content").contains(keyword)
-                    .or("resourcename").contains(keyword)
-                    .or("doc_description").contains(keyword)
-                    .or("doc_customer_name").contains(keyword)
-                    .or("doc_author_name").contains(keyword)
-                    .or("doc_code").contains(keyword));
+            log.info("keyword: {}", keyword.split("\\s"));
+            List<String> keywords = Arrays.asList(keyword.split("\\s"));
+            for (String keyword: keywords) {
+                criteria = criteria.and(new Criteria("content").contains(keyword)
+                        .or("resourcename").contains(keyword)
+                        .or("doc_description").contains(keyword)
+                        .or("doc_customer_name").contains(keyword)
+                        .or("doc_author_name").contains(keyword)
+                        .or("doc_code").contains(keywords));
+            }
         }
 
         log.info("searchCriteria = {}", criteria);
