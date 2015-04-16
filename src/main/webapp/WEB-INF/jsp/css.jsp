@@ -35,6 +35,8 @@ pre {
 
 #documents label { margin-right: 3px; }
 
+#documents .list-group-item { overflow: hidden; }
+
 .doc_author { color: gray; }
 
 .doc_thumbnail {

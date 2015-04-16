@@ -13,15 +13,17 @@
   <meta http-equiv="cache-control" content="no-cache">
 
   <title>FICKS: FSL Intranet Community Knowledge management System</title>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+  <%--
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  --%>
   <link rel="shortcut icon" href="/favicon.ico">
   <style><jsp:include page="css.jsp"/></style>
 
   <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="/js/lib/html5shiv.min.js"></script>
+    <script src="/js/lib/respond.min.js"></script>
   <![endif]-->
 </head>
 <body>
@@ -243,7 +245,7 @@
 
 <script src="/js/lib/modernizr.js"></script>
 <script src="/js/lib/jquery-1.11.2.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="/js/lib/bootstrap.min.js"></script>
 <script src="/js/lib/bootstrap-datepicker.min.js"></script>
 <script src="/js/lib/bootstrap-datepicker.ja.min.js"></script>
 <script>
