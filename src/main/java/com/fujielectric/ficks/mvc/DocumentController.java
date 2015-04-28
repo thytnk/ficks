@@ -60,6 +60,7 @@ public class DocumentController {
 
     @RequestMapping(value="search",method=GET)
     public ModelAndView search(DocumentSearchCommand command) {
+        log.info("search: {}", command);
         ModelAndView mav = new ModelAndView("index");
 
         Query query = new SimpleQuery(command.searchCriteria());
@@ -83,6 +84,7 @@ public class DocumentController {
 
     @RequestMapping(value="/{code}/download", produces="application/force-download")
     public void download(HttpServletResponse res, @PathVariable("code")String code) throws IOException {
+        log.info("download: {}", code);
         Document doc = documentRepository.findByCode(code);
         if (doc == null)
             return;
@@ -116,7 +118,7 @@ public class DocumentController {
         map.put("B", "技術資料");
         map.put("C", "設定資料");
         map.put("D", "手順資料");
-        map.put("E", "業務窓口");
+        map.put("E", "業務関連");
         return map;
     }
 

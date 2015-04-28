@@ -5,6 +5,9 @@ h1>b { font-weight:normal; color: red;}
 h2   { font-size: 1.3em; }
 
 .form-group { padding-right: 5px;  }
+/*
+.navbar-nav > li > a{ padding: 0px 15px background:pink;}*/
+.navbar-brand { padding-top: 5px; }
 
 body {
   font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
@@ -76,6 +79,12 @@ pre {
   color: gray;
   text-align: right;
 }
+
+.alert-warning {
+  color:#c9302c;
+  font-weight:bold;
+}
+
 
 /*----------------------------------------------------------------------*/
 .btn-category-A {

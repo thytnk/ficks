@@ -1,10 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"  pageEncoding="utf-8"%>
-<!doctype html>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<html lang="ja">
+<%@ page contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%><!doctype html>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"
+%><%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"
+%><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"
+%><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"
+%><html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,13 +12,14 @@
   <meta http-equiv="pragma" content="no-cache">
   <meta http-equiv="cache-control" content="no-cache">
 
-  <title>FICKS: FSL Intranet Community Knowledge management System</title>
+  <title>FICKS(プロトタイプ): FSL Intranet Community Knowledge management System</title>
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="/css/lib/pnotify.custom.min.css">
   <%--
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   --%>
-  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="shortcut icon" href="favicon.ico">
   <style><jsp:include page="css.jsp"/></style>
 
   <!--[if lt IE 9]>
@@ -37,35 +38,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a href="/documents" class="navbar-brand"><img src="/img/FICKS1.png?a" alt="FICKS:"></a>
+          <a href="/documents" class="navbar-brand"><img src="/img/logo-mid.png" alt="FICKS:"></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <h1 class="navbar-text"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem</h1>
+          <h1 class="navbar-text"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem (プロトタイプ)</h1>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/documents" class="glyphicon glyphicon-home" aria-hidden="true"> HOME</a></li>
           </ul>
         </div>
       </div>
     </nav>
-    <!--
-<div id="header" class="navbar navbar-default navbar-fixed-top">
-  <div class="container">
-  <div class="navbar-header">
-
-    <a href="/documents" class="navbar-brand"><img src="/img/FICKS.png" alt="FICKS:"></a></div>
-
-  </div>
-  <div id="navbar" class="navbar-collapse collapse">
-  <h1 class="navbar-text col-xs-hidden"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem</h1>
-  </div>
-  </div>
-      <div class="nav navbar-nav navbar-right">
-        <a href="/documents" class="glyphicon glyphicon-home" aria-hidden="true"> HOME</a>
-        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-      </div>
-
-</div>
--->
 <div class="container">
 <div class="row small">
   <form:form id="search" action="/documents/search" method="GET">
@@ -76,7 +58,7 @@
       <label class="col-sm-2 btn btn-category-B"><form:checkbox path="category" value="B"/> 技術資料</label>
       <label class="col-sm-2 btn btn-category-C"><form:checkbox path="category" value="C"/> 設定資料</label>
       <label class="col-sm-2 btn btn-category-D"><form:checkbox path="category" value="D"/> 手順資料</label>
-      <label class="col-sm-2 btn btn-category-E"><form:checkbox path="category" value="E"/> 業務窓口</label>
+      <label class="col-sm-2 btn btn-category-E"><form:checkbox path="category" value="E"/> 業務関連</label>
       </div>
     </div>
 
@@ -180,6 +162,11 @@
   <div class="col-sm-10 col-xs-12">
     <c:choose>
     <c:when test="${mode=='new'}">
+    <div class="alert alert-warning row small">
+      ※ ドキュメントは全て社外秘です。お取扱いについては、十分ご注意ください。<br>
+      ※ 本システムの掲載内容はドキュメント作成時点のものであり、
+      現在または掲載時点での内容を保証するものではありません。<br>
+    </div>
     <h2 class="row">新着情報</h2>
     </c:when>
     <c:when test="${mode=='search'}">
@@ -206,7 +193,7 @@
                 <span class="label label-category-${doc.category}"><c:out value="${categories[doc.category]}"/></span>
                 <span title="分野"><c:out value="${areas[doc.area]}"/></span> /
                 <span title="ドキュメント種類"><c:out value="${purposes[doc.purpose]}"/></span> /
-                <span title="成否"><c:out value="${results[doc.result]}"/><span>
+                <span title="成否"><c:out value="${results[doc.result]}"/></span>
                 <c:if test="${doc.reason != null}"><span title="成否要因">（<c:out value="${reasons[doc.reason]}"/>）</span></c:if>
               </p>
             </div>
@@ -240,21 +227,22 @@
   </div>
 </div>
 
-<div id="footer" class="navbar navbar-default navbar-fixed-bottom container">
+<div id="footer" class="navbar navbar-default navbar-fixed-bottom">
 </div>
-
+</div>
 <script src="/js/lib/modernizr.js"></script>
 <script src="/js/lib/jquery-1.11.2.min.js"></script>
 <script src="/js/lib/bootstrap.min.js"></script>
 <script src="/js/lib/bootstrap-datepicker.min.js"></script>
 <script src="/js/lib/bootstrap-datepicker.ja.min.js"></script>
+<script src="/js/lib/pnotify.custom.min.js"></script>
 <script>
 $(function() {
   $.get("/link.jsp?" + Math.random(), function(data) {
     $("#site-link").html(data);
   });
 
-  $.get("/footer.jsp", function(data) {
+  $.get("/footer.jsp?e", function(data) {
     $("#footer").html(data);
   });
 
@@ -285,8 +273,27 @@ $(function() {
     language: 'ja'
   });
   //}
+/*
+  var notice = new PNotify({
+        title: "運用者からのお知らせ",
+        text: "ドキュメントは全て社外秘です。",
+        cornerclass: "",
+        delay: 2000,
+        width: "40%",
+//        addclass: "stack-bottomleft",
+//        stack: "stack_bottomright",
+        type: "info",
+        animate_speed: 'fast',
+        buttons: {
+          closer: false,
+          sticker: false
+        }
+  });
+  notice.get().click(function() {
+      notice.remove();
+  });
+*/
 });
 </script>
-
 </body>
 </html>

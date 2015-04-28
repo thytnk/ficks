@@ -1,6 +1,7 @@
 package com.fujielectric.ficks.mvc;
 
 import lombok.Data;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.solr.core.query.Criteria;
@@ -44,35 +45,35 @@ public class DocumentSearchCommand {
     public String keyword;
 
     Criteria searchCriteria() {
-        log.info("### searchCriteria");
+        log.debug("### searchCriteria");
         Criteria criteria = new Criteria("id").isNotNull();
 //        Criteria criteria = new Criteria("doc_category").in(1, 2, 3, 4);
 //        Criteria criteria = new Criteria("doc_area").is(Integer.parseInt(area));
 
         if (category != null && !category.isEmpty()) {
-            log.info("category: {}", category.toArray());
+            log.debug("category: {}", category.toArray());
             criteria = criteria.and(new Criteria("doc_category").in(category));
         }
 
         if (area != null && !"*".equals(area)) {
-            log.info("area: {}", area);
+            log.debug("area: {}", area);
             criteria = criteria.and(new Criteria("doc_area").is(Integer.parseInt(area)));
         }
 
         if (purpose != null && !"*".equals(purpose)) {
-            log.info("purpose: {}", purpose);
+            log.debug("purpose: {}", purpose);
             criteria = criteria.and(new Criteria("doc_purpose").is(Integer.parseInt(purpose)));
         }
 
         if (customer != null && !"".equals(customer)) {
-            log.info("customer: {}", customer);
+            log.debug("customer: {}", customer);
             for (String s : customer.split("\\s")) {
                 criteria = criteria.and(new Criteria("doc_customer_name").contains(s));
             }
         }
 
         if (author != null && !"".equals(author)) {
-            log.info("author: {}", author);
+            log.debug("author: {}", author);
             for (String s : author.split("\\s")) {
                 criteria = criteria.and(new Criteria("doc_author_name").contains(s)
                         .or(new Criteria("doc_emp_number").is(s)));
@@ -80,19 +81,19 @@ public class DocumentSearchCommand {
         }
 
         if (result != null && !"*".equals(result)) {
-            log.info("result: {}", result);
+            log.debug("result: {}", result);
             criteria = criteria.and(new Criteria("doc_result").is(Integer.parseInt(result)));
         }
 
         if (reason != null && !"*".equals(reason)) {
-            log.info("reason: {}", reason);
+            log.debug("reason: {}", reason);
             criteria = criteria.and(new Criteria("doc_reason").is(Integer.parseInt(reason)));
         }
 
 
         SimpleDateFormat dateParser = new SimpleDateFormat("yyyy/MM/dd");
         if (publishedFrom != null && !"".equals(publishedFrom)) {
-            log.info("publishedFrom: {}", publishedFrom);
+            log.debug("publishedFrom: {}", publishedFrom);
 
             Date publishedDateFrom = null;
             try {
@@ -104,7 +105,7 @@ public class DocumentSearchCommand {
         }
 
         if (publishedTo != null && !"".equals(publishedTo)) {
-            log.info("publishedTo: {}", publishedTo);
+            log.debug("publishedTo: {}", publishedTo);
             Date publishedDateTo = null;
             try {
                 publishedDateTo = dateParser.parse(publishedTo);
@@ -115,7 +116,7 @@ public class DocumentSearchCommand {
         }
 
         if (keyword != null && !"".equals(keyword)) {
-            log.info("keyword: {}", keyword.split("\\s"));
+            log.debug("keyword: {}", keyword.split("\\s"));
             List<String> keywords = Arrays.asList(keyword.split("\\s"));
             for (String keyword: keywords) {
                 criteria = criteria.and(new Criteria("content").contains(keyword)
@@ -123,11 +124,16 @@ public class DocumentSearchCommand {
                         .or("doc_description").contains(keyword)
                         .or("doc_customer_name").contains(keyword)
                         .or("doc_author_name").contains(keyword)
-                        .or("doc_code").contains(keywords));
+                        .or("doc_code").contains(keyword));
             }
         }
 
-        log.info("searchCriteria = {}", criteria);
+        log.debug("searchCriteria = {}", criteria);
         return criteria;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }
