@@ -1,6 +1,6 @@
 create table Areas (
     area_id       int         not null primary key
-  , area_name     varchar(20) not null
+  , name          varchar(20) not null
   , display_order int         not null
 )
 ;

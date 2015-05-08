@@ -1,6 +1,6 @@
 create table Purposes (
     purpose_id    int         not null primary key
-  , purpose_name  varchar(20) not null
+  , name          varchar(20) not null
   , display_order int         not null
 )
 ;

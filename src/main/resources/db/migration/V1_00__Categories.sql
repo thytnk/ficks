@@ -1,12 +1,12 @@
 create table Categories (
     category_id   serial      not null primary key
-  , category_code char(1)     not null unique
-  , category_name varchar(20) not null
+  , code          char(1)     not null unique
+  , name          varchar(20) not null
   , display_order int         not null
 )
 ;
 
-insert into Categories(category_code, category_name, display_order)
+insert into Categories(code, name, display_order)
 values
   ('A', '提案資料', 10)
 , ('B', '技術資料', 20)

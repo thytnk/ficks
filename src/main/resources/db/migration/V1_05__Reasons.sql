@@ -1,6 +1,6 @@
 create table Reasons (
     reason_id     int         not null primary key
-  , reason_name   varchar(20) not null
+  , name          varchar(20) not null
   , display_order int         not null
 )
 ;

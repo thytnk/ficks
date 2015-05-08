@@ -2,18 +2,20 @@ package com.fujielectric.ficks.domain;
 
 import lombok.Data;
 import org.apache.solr.client.solrj.beans.Field;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.Indexed;
 
-import java.io.File;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
+//@Entity(name="documents")
 @Data
 public class Document {
 
-    @Id @Indexed @Field
+    @Id
+    @Indexed @Field
     public String id;
 
     /** 管理番号 */
@@ -26,19 +28,19 @@ public class Document {
 
     /** 種類 */
     @Indexed @Field("doc_purpose")
-    public String purpose;
+    public Integer purpose;
 
     /** 分野 */
     @Indexed @Field("doc_area")
-    public String area;
+    public Integer area;
 
     /** 成否 */
     @Indexed @Field("doc_result")
-    public String result;
+    public Integer result;
 
     /** 成否要因 */
     @Indexed @Field("doc_reason")
-    public String reason;
+    public Integer reason;
 
     /** 部署名 */
     @Indexed @Field("doc_dept_name")
@@ -72,13 +74,7 @@ public class Document {
 
     @Indexed @Field("last_modified")
     public String lastModified;
-/*
-    @Indexed @Field
-    public String name;
 
-    @Indexed
-    public String text;
-*/
     public String getFileName() {
         if (resourceName != null) {
             return Paths.get(resourceName).getFileName().toString();
