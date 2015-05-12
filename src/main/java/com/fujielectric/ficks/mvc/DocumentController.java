@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrOperations;
-import org.springframework.data.solr.core.query.Criteria;
-import org.springframework.data.solr.core.query.Query;
-import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.data.solr.core.query.*;
 
+import org.springframework.data.solr.core.query.result.FacetEntry;
+import org.springframework.data.solr.core.query.result.FacetFieldEntry;
+import org.springframework.data.solr.core.query.result.FacetPage;
+import org.springframework.data.solr.core.query.result.FacetPivotFieldEntry;
+import org.springframework.data.solr.repository.Pivot;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,13 +65,25 @@ public class DocumentController {
         log.info("search: {}", command);
         ModelAndView mav = new ModelAndView("index");
 
-        Query query = new SimpleQuery(command.searchCriteria());
+        FacetQuery query = new SimpleFacetQuery(command.searchCriteria());
+        query.setFacetOptions(new FacetOptions().addFacetOnField("doc_area").addFacetOnField("doc_purpose"));
         query.addSort(sortByPublishedDate());
         query.setRows(100);
-        Page resultPage = solrTemplate.queryForPage(query, Document.class);
+        FacetPage<Document> resultPage = solrTemplate.queryForFacetPage(query, Document.class);
 
         List<Document> docs = resultPage.getContent();
-
+        Page<FacetFieldEntry> areaFacet = resultPage.getFacetResultPage("doc_area");
+        mav.addObject("areaFacet", areaFacet);
+        Page<FacetFieldEntry> purposeFacet = resultPage.getFacetResultPage("doc_purpose");
+        mav.addObject("purposeFacet", purposeFacet);
+/*        for (Page<? extends FacetEntry> page : resultPage.getAllFacets()) {
+            page.
+            for (FacetEntry facetEntry : page.getContent()) {
+                facetEntry.
+                String categoryName = facetEntry.getValue();  // name of the category
+                long count = facetEntry.getValueCount();      // number of books in this category
+            }
+        }*/
         gui.addDropDowns(mav);
         mav.addObject("command", command);
         mav.addObject("list", resultPage);

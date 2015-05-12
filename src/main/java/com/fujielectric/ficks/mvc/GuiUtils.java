@@ -35,12 +35,12 @@ public class GuiUtils {
         categoryRepository.findAll(sortByDisplayOrder).forEach(it -> categories.put(it.code, it.name));
         mav.addObject("categories", categories);
 
-        Map<Integer, String> areas = new TreeMap<>();
-        areaRepository.findAll(sortByDisplayOrder).forEach(it -> areas.put(it.id, it.name));
+        Map<String, String> areas = new TreeMap<>();
+        areaRepository.findAll(sortByDisplayOrder).forEach(it -> areas.put(it.id.toString(), it.name));
         mav.addObject("areas", areas);
 
-        Map<Integer, String> purposes = new TreeMap<>();
-        purposeRepository.findAll(sortByDisplayOrder).forEach(it -> purposes.put(it.id, it.name));
+        Map<String, String> purposes = new TreeMap<>();
+        purposeRepository.findAll(sortByDisplayOrder).forEach(it -> purposes.put(it.id.toString(), it.name));
         mav.addObject("purposes", purposes);
 
         Map<Integer, String> results = new TreeMap<>();

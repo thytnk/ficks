@@ -157,7 +157,31 @@
 
 <div class="row">
 
-  <div id="site-link" class="col-sm-2 hidden-xs "><div class="list-group"></div></div>
+  <div id="facet-link" class="col-sm-2 hidden-xs">
+    <c:if test="${areaFacet != null}">
+      <ul class="list-group ">
+
+      <li class="list-group-item"><b>分野</b></li>
+      <c:forEach var="entry" items="${areaFacet.content}">
+        <li class="list-group-item"><c:out value="${areas[entry.value]}"/>(${entry.valueCount})</li>
+      </c:forEach>
+      </ul>
+    </c:if>
+
+    <c:if test="${purposeFacet != null}">
+      <ul class="list-group ">
+
+      <li class="list-group-item"><b>分野</b></li>
+      <c:forEach var="entry" items="${purposeFacet.content}">
+        <li class="list-group-item"><c:out value="${purposes[entry.value]}"/>(${entry.valueCount})</li>
+      </c:forEach>
+      </ul>
+    </c:if>
+  </div>
+
+  <div id="site-link" class="col-sm-2 hidden-xs ">
+    <div class="list-group"></div>
+  </div>
 
   <div class="col-sm-10 col-xs-12">
     <c:choose>
@@ -189,11 +213,11 @@
               </p>
             </div>
             <div class="row">
-              <p class="col-sm-12">
+              <p class="col-sm-12"><%--
                 <span class="label label-category-${doc.category}"><c:out value="${categories[doc.category]}"/></span>
                 <span title="分野"><c:out value="${areas[doc.area]}"/></span> /
                 <span title="ドキュメント種類"><c:out value="${purposes[doc.purpose]}"/></span> /
-                <span title="成否"><c:out value="${results[doc.result]}"/></span>
+                <span title="成否"><c:out value="${results[doc.result]}"/></span>--%>
                 <c:if test="${doc.reason != null}"><span title="成否要因">（<c:out value="${reasons[doc.reason]}"/>）</span></c:if>
               </p>
             </div>

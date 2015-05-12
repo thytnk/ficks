@@ -40,3 +40,4 @@ gradle.properties
 /src/main/webapp/img/thumbnail/*
 /src/main/webapp/link.jsp
 /src/main/webapp/footer.jsp
+logs/
