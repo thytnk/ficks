@@ -10,23 +10,23 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrOperations;
 import org.springframework.data.solr.core.query.*;
 
-import org.springframework.data.solr.core.query.result.FacetEntry;
 import org.springframework.data.solr.core.query.result.FacetFieldEntry;
 import org.springframework.data.solr.core.query.result.FacetPage;
-import org.springframework.data.solr.core.query.result.FacetPivotFieldEntry;
-import org.springframework.data.solr.repository.Pivot;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.*;
-import java.util.Hashtable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping("/documents")
@@ -41,7 +41,6 @@ public class DocumentController {
 
     @Autowired
     private GuiUtils gui;
-
 
     @RequestMapping(method=GET)
     public ModelAndView home() {
@@ -117,7 +116,52 @@ public class DocumentController {
         os.close();
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value="new",method=GET)
+    public ModelAndView addForm() {
+        log.info("new:");
+        ModelAndView mav = new ModelAndView("add");
+
+        gui.addDropDowns(mav);
+        mav.addObject("command", new DocumentAddCommand());
+        return mav;
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(method=POST)
+    public ModelAndView add(@Valid DocumentAddCommand command, Errors errors) {
+        log.info("add:");
+        ModelAndView mav = new ModelAndView("add");
+
+        if (errors.hasErrors()) {
+            mav.addObject("command", command);
+        }
+
+        gui.addDropDowns(mav);
+        mav.addObject("command", new DocumentAddCommand());
+        return mav;
+    }
+
     private Sort sortByPublishedDate() {
         return new Sort(Sort.Direction.DESC, "doc_publish_date");
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ModelAndView exceptionBadRequest(MethodArgumentNotValidException ex){
+        try {
+            log.warn("入力値チェックエラーが発生しました");
+
+            List<String> errorList = new ArrayList<String>();
+            BindingResult br = ex.getBindingResult();
+            // エラーメッセージを拾ってJSONで返す
+//            for (ObjectError err : br.getAllErrors()){
+  //              errorList.add(messageSourceHelper.getMessage(req, err));
+    //        }
+            return new ModelAndView("index");
+        } catch (Exception e){
+            log.error(e.getMessage(), e);
+            return null;
+        }
     }
 }

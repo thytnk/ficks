@@ -67,28 +67,14 @@
         <label class="control-label" for="search_area">分野</label>
         <form:select id="search_area" path="area" class="form-control input-sm">
           <form:option value="*">&nbsp;</form:option>
-          <form:option value="1">小学校</form:option>
-          <form:option value="2">中学校</form:option>
-          <form:option value="3">高校</form:option>
-          <form:option value="4">大学</form:option>
-          <form:option value="5">公共</form:option>
-          <form:option value="6">金融</form:option>
-          <form:option value="7">産業</form:option>
-          <form:option value="99">その他</form:option>
+          <form:options items="${areas}"/>
         </form:select>
       </p>
       <p class="col-sm-2 form-group">
         <label class="control-label" for="search_purpose">ドキュメント種類</label>
         <form:select id="search_purpose" path="purpose" class="form-control input-sm">
           <form:option value="*">&nbsp;</form:option>
-          <form:option value="1">提案書</form:option>
-          <form:option value="2">技術書</form:option>
-          <form:option value="3">設定書</form:option>
-          <form:option value="4">マニュアル</form:option>
-          <form:option value="5">仕様書</form:option>
-          <form:option value="6">事例集</form:option>
-          <form:option value="7">手順書</form:option>
-          <form:option value="99">その他</form:option>
+          <form:options items="${purposes}"/>
         </form:select>
       </p>
       <p class="col-sm-3 form-group">
@@ -103,23 +89,14 @@
         <label class="control-label" for="search_result">成否</label>
         <form:select id="search_result" path="result" class="form-control input-sm">
           <form:option value="*">&nbsp;</form:option>
-          <form:option value="1">成功</form:option>
-          <form:option value="0">失敗</form:option>
-          <form:option value="9">なし</form:option>
+          <form:options items="${results}"/>
         </form:select>
       </p>
       <p class="col-sm-2 form-group">
         <label class="control-label" for="search_reason">成否要因</label>
         <form:select id="search_reason" path="reason" class="form-control input-sm">
           <form:option value="*">&nbsp;</form:option>
-          <form:option value="1">価格</form:option>
-          <form:option value="2">顧客要件</form:option>
-          <form:option value="3">プレゼン力</form:option>
-          <form:option value="4">機能・性能</form:option>
-          <form:option value="5">サービス品質</form:option>
-          <form:option value="6">差別化</form:option>
-          <form:option value="7">政治的判断</form:option>
-          <form:option value="8">総合的判断</form:option>
+          <form:options items="${reasons}"/>
         </form:select>
       </p>
     </div>
@@ -156,7 +133,7 @@
 <hr>
 
 <div class="row">
-
+<!--
   <div id="facet-link" class="col-sm-2 hidden-xs">
     <c:if test="${areaFacet != null}">
       <ul class="list-group ">
@@ -171,14 +148,14 @@
     <c:if test="${purposeFacet != null}">
       <ul class="list-group ">
 
-      <li class="list-group-item"><b>分野</b></li>
+      <li class="list-group-item"><b>ドキュメント種類</b></li>
       <c:forEach var="entry" items="${purposeFacet.content}">
         <li class="list-group-item"><c:out value="${purposes[entry.value]}"/>(${entry.valueCount})</li>
       </c:forEach>
       </ul>
     </c:if>
   </div>
-
+-->
   <div id="site-link" class="col-sm-2 hidden-xs ">
     <div class="list-group"></div>
   </div>

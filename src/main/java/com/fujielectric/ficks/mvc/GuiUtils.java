@@ -32,23 +32,33 @@ public class GuiUtils {
 
     void addDropDowns(ModelAndView mav) {
         Map<String, String> categories = new TreeMap<>();
-        categoryRepository.findAll(sortByDisplayOrder).forEach(it -> categories.put(it.code, it.name));
+        List<Category> categoryList = categoryRepository.findAll(sortByDisplayOrder);
+        categoryList.forEach(it -> categories.put(it.code, it.name));
         mav.addObject("categories", categories);
+        mav.addObject("categoryList", categoryList);
 
         Map<String, String> areas = new TreeMap<>();
-        areaRepository.findAll(sortByDisplayOrder).forEach(it -> areas.put(it.id.toString(), it.name));
+        List<Area> areaList = areaRepository.findAll(sortByDisplayOrder);
+        areaList.forEach(it -> areas.put(it.id.toString(), it.name));
         mav.addObject("areas", areas);
+        mav.addObject("areaList", areaList);
 
         Map<String, String> purposes = new TreeMap<>();
-        purposeRepository.findAll(sortByDisplayOrder).forEach(it -> purposes.put(it.id.toString(), it.name));
+        List<Purpose> purposeList = purposeRepository.findAll(sortByDisplayOrder);
+        purposeList.forEach(it -> purposes.put(it.id.toString(), it.name));
         mav.addObject("purposes", purposes);
+        mav.addObject("purposeList", purposeList);
 
         Map<Integer, String> results = new TreeMap<>();
-        resultRepository.findAll(sortByDisplayOrder).forEach(it -> results.put(it.id, it.name));
+        List<Result> resultList = resultRepository.findAll(sortByDisplayOrder);
+        resultList.forEach(it -> results.put(it.id, it.name));
         mav.addObject("results", results);
+        mav.addObject("resultList", resultList);
 
         Map<Integer, String> reasons = new TreeMap<>();
-        reasonRepository.findAll(sortByDisplayOrder).forEach(it -> reasons.put(it.id, it.name));
+        List<Reason> reasonList = reasonRepository.findAll(sortByDisplayOrder);
+        reasonList.forEach(it -> reasons.put(it.id, it.name));
         mav.addObject("reasons", reasons);
+        mav.addObject("reasonList", reasonList);
     }
 }
