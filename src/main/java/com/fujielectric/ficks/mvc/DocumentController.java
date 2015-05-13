@@ -13,11 +13,14 @@ import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.FacetFieldEntry;
 import org.springframework.data.solr.core.query.result.FacetPage;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -28,9 +31,9 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-@RestController
+@Controller
 @RequestMapping("/documents")
-public class DocumentController {
+public class DocumentController extends WebMvcConfigurerAdapter {
     private Logger log = LoggerFactory.getLogger(DocumentController.class);
 
     @Autowired
@@ -43,7 +46,7 @@ public class DocumentController {
     private GuiUtils gui;
 
     @RequestMapping(method=GET)
-    public ModelAndView home() {
+    public ModelAndView home(Model model) {
         ModelAndView mav = new ModelAndView("index");
 
         Query query = new SimpleQuery(new Criteria("id").isNotNull());
@@ -52,7 +55,7 @@ public class DocumentController {
 
         List<Document> docs = resultPage.getContent();
 
-        gui.addDropDowns(mav);
+        gui.addDropDowns(model);
         mav.addObject("command", new DocumentSearchCommand());
         mav.addObject("list", resultPage);
         mav.addObject("mode", "new");
@@ -60,7 +63,7 @@ public class DocumentController {
     }
 
     @RequestMapping(value="search",method=GET)
-    public ModelAndView search(DocumentSearchCommand command) {
+    public ModelAndView search(DocumentSearchCommand command, Model model) {
         log.info("search: {}", command);
         ModelAndView mav = new ModelAndView("index");
 
@@ -83,7 +86,7 @@ public class DocumentController {
                 long count = facetEntry.getValueCount();      // number of books in this category
             }
         }*/
-        gui.addDropDowns(mav);
+        gui.addDropDowns(model);
         mav.addObject("command", command);
         mav.addObject("list", resultPage);
         mav.addObject("mode", "search");
@@ -116,36 +119,10 @@ public class DocumentController {
         os.close();
     }
 
-    @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value="new",method=GET)
-    public ModelAndView addForm() {
-        log.info("new:");
-        ModelAndView mav = new ModelAndView("add");
-
-        gui.addDropDowns(mav);
-        mav.addObject("command", new DocumentAddCommand());
-        return mav;
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(method=POST)
-    public ModelAndView add(@Valid DocumentAddCommand command, Errors errors) {
-        log.info("add:");
-        ModelAndView mav = new ModelAndView("add");
-
-        if (errors.hasErrors()) {
-            mav.addObject("command", command);
-        }
-
-        gui.addDropDowns(mav);
-        mav.addObject("command", new DocumentAddCommand());
-        return mav;
-    }
-
     private Sort sortByPublishedDate() {
         return new Sort(Sort.Direction.DESC, "doc_publish_date");
     }
-
+/*
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ModelAndView exceptionBadRequest(MethodArgumentNotValidException ex){
@@ -163,5 +140,5 @@ public class DocumentController {
             log.error(e.getMessage(), e);
             return null;
         }
-    }
+    }*/
 }
