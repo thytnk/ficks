@@ -46,9 +46,7 @@ public class DocumentController extends WebMvcConfigurerAdapter {
     private GuiUtils gui;
 
     @RequestMapping(method=GET)
-    public ModelAndView home(Model model) {
-        ModelAndView mav = new ModelAndView("index");
-
+    public String home(DocumentSearchCommand documentSearchCommand, Model model) {
         Query query = new SimpleQuery(new Criteria("id").isNotNull());
         query.addSort(sortByPublishedDate());
         Page resultPage = solrTemplate.queryForPage(query, Document.class);
@@ -56,18 +54,15 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         List<Document> docs = resultPage.getContent();
 
         gui.addDropDowns(model);
-        mav.addObject("command", new DocumentSearchCommand());
-        mav.addObject("list", resultPage);
-        mav.addObject("mode", "new");
-        return mav;
+        model.addAttribute("list", resultPage);
+        model.addAttribute("mode", "new");
+        return "documents";
     }
 
     @RequestMapping(value="search",method=GET)
-    public ModelAndView search(DocumentSearchCommand command, Model model) {
-        log.info("search: {}", command);
-        ModelAndView mav = new ModelAndView("index");
-
-        FacetQuery query = new SimpleFacetQuery(command.searchCriteria());
+    public String search(DocumentSearchCommand documentSearchCommand, Model model) {
+        log.info("search: {}", documentSearchCommand);
+        FacetQuery query = new SimpleFacetQuery(documentSearchCommand.searchCriteria());
         query.setFacetOptions(new FacetOptions().addFacetOnField("doc_area").addFacetOnField("doc_purpose"));
         query.addSort(sortByPublishedDate());
         query.setRows(100);
@@ -75,9 +70,9 @@ public class DocumentController extends WebMvcConfigurerAdapter {
 
         List<Document> docs = resultPage.getContent();
         Page<FacetFieldEntry> areaFacet = resultPage.getFacetResultPage("doc_area");
-        mav.addObject("areaFacet", areaFacet);
+        model.addAttribute("areaFacet", areaFacet);
         Page<FacetFieldEntry> purposeFacet = resultPage.getFacetResultPage("doc_purpose");
-        mav.addObject("purposeFacet", purposeFacet);
+        model.addAttribute("purposeFacet", purposeFacet);
 /*        for (Page<? extends FacetEntry> page : resultPage.getAllFacets()) {
             page.
             for (FacetEntry facetEntry : page.getContent()) {
@@ -87,10 +82,10 @@ public class DocumentController extends WebMvcConfigurerAdapter {
             }
         }*/
         gui.addDropDowns(model);
-        mav.addObject("command", command);
-        mav.addObject("list", resultPage);
-        mav.addObject("mode", "search");
-        return mav;
+//        model.addAttribute("command", command);
+        model.addAttribute("list", resultPage);
+        model.addAttribute("mode", "search");
+        return "documents";
     }
 
     @RequestMapping(value="/{code}/download", produces="application/force-download")

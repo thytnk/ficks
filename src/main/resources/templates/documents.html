@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta http-equiv="pragma" content="no-cache"/>
+  <meta http-equiv="cache-control" content="no-cache"/>
+
+  <title>FICKS(プロトタイプ): FSL Intranet Community Knowledge management System</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
+  <link rel="stylesheet" href="/css/lib/pnotify.custom.min.css"/>
+  <link rel="shortcut icon" href="favicon.ico"/>
+  <link rel="stylesheet" href="/css/screen.css?a"/>
+
+  <!--[if lt IE 9]>
+    <script src="/js/lib/html5shiv.min.js"></script>
+    <script src="/js/lib/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="/documents" class="navbar-brand"><img src="/img/logo-mid.png" alt="FICKS:"/></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <h1 class="navbar-text"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem (プロトタイプ)</h1>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/documents" class="glyphicon glyphicon-home" aria-hidden="true"> HOME</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+<div class="container">
+<div class="row small">
+  <form id="search" action="#" th:action="@{/documents/search}" th:object="${documentSearchCommand}" method="GET">
+
+    <div id="categories" class="row container">
+      <div class="col-sm-8 row btn-group">
+      <label class="col-sm-2 btn btn-category-A"><input type="checkbox" th:field="*{category}" value="A"/> 提案資料</label>
+      <label class="col-sm-2 btn btn-category-B"><input type="checkbox" th:field="*{category}" value="B"/> 技術資料</label>
+      <label class="col-sm-2 btn btn-category-C"><input type="checkbox" th:field="*{category}" value="C"/> 設定資料</label>
+      <label class="col-sm-2 btn btn-category-D"><input type="checkbox" th:field="*{category}" value="D"/> 手順資料</label>
+      <label class="col-sm-2 btn btn-category-E"><input type="checkbox" th:field="*{category}" value="E"/> 業務関連</label>
+      </div>
+    </div>
+
+    <div class="row">
+      <p class="col-sm-2 form-group">
+        <label class="control-label" for="search_area">分野</label>
+        <select id="search_area" th:field="*{area}" class="form-control input-sm">
+          <option value="*">&nbsp;</option>
+          <option th:each="a : ${areaList}" th:value="${a.id}" th:text="${a.name}"/>
+        </select>
+      </p>
+      <p class="col-sm-2 form-group">
+        <label class="control-label" for="search_purpose">ドキュメント種類</label>
+        <select id="search_purpose" th:field="*{purpose}" class="form-control input-sm">
+          <option value="*">&nbsp;</option>
+          <option th:each="p : ${purposeList}" th:value="${p.id}" th:text="${p.name}"/>
+        </select>
+      </p>
+      <p class="col-sm-3 form-group">
+        <label class="control-label" for="search_customer">顧客名</label>
+        <input type="text" id="search_customer" th:field="*{customer}" class="form-control input-sm"/>
+      </p>
+      <p class="col-sm-2 form-group">
+        <label class="control-label" for="search_author">担当者</label>
+        <input type="text" id="search_author" th:field="*{author}" class="form-control input-sm"/>
+      </p>
+      <p class="col-sm-1 form-group">
+        <label class="control-label" for="search_result">成否</label>
+        <select id="search_result" th:field="*{result}" class="form-control input-sm">
+          <option value="*">&nbsp;</option>
+          <option th:each="r : ${resultList}" th:value="${r.id}" th:text="${r.name}"/>
+        </select>
+      </p>
+      <p class="col-sm-2 form-group">
+        <label class="control-label" for="search_reason">成否要因</label>
+        <select id="search_reason" th:field="*{reason}" class="form-control input-sm">
+          <option value="*"></option>
+          <option th:each="r : ${reasonList}" th:value="${r.id}" th:text="${r.name}"/>
+        </select>
+      </p>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label class="control-label" for="search_published_to">発行日または期間</label>
+
+            <div class="input-group">
+              <input type="text" id="search_published_from" th:field="*{publishedFrom}" class="form-control"/>
+              <span class="input-group-addon">～</span>
+              <input type="text" id="search_published_to" th:field="*{publishedTo}" class="form-control"/>
+            </div>
+
+        </div>
+      </div>
+
+      <p class="col-sm-6 form-group">
+        <label class="control-label" for="search_keyword">キーワード</label>
+        <input type="search" id="search_keyword" th:field="*{keyword}" class="form-control" autofocus="autofocus"/>
+      </p>
+
+   
+      <p class="col-sm-2 form-group">
+        <label class="control-label">&nbsp;</label>
+        <button type="submit" id="searchButton" class="form-control btn btn-primary">検索</button>
+      </p>
+    </div>
+
+  </form>
+</div>
+
+<hr/>
+
+<div class="row">
+<!--
+  <div id="facet-link" class="col-sm-2 hidden-xs">
+    <ul class="list-group " th:if="${areaFacet != null}">
+      <li class="list-group-item"><b>分野</b></li>
+      <li class="list-group-item" th:each="entry : ${areaFacet.content}">
+        <span th:text="${areasForString[entry.value]}"></span>
+        <span th:text="${entry.valueCount}"></span>
+      </li>
+    </ul>
+
+    <ul class="list-group " th:if="${purposeFacet != null}">
+      <li class="list-group-item"><b>ドキュメント種類</b></li>
+      <li class="list-group-item" th:each="entry : ${purposeFacet.content}">
+        <span th:text="${purposesForString[entry.value]}"></span>
+        <span th:text="${entry.valueCount}"></span>
+      </li>
+    </ul>
+  </div>
+-->
+  <div id="site-link" class="col-sm-2 hidden-xs ">
+    <div class="list-group"></div>
+  </div>
+
+  <div class="col-sm-10 col-xs-12">
+    <div class="alert alert-warning row small" th:if="${mode=='new'}">
+      ※ ドキュメントは全て社外秘です。お取扱いについては、十分ご注意ください。<br/>
+      ※ 本システムの掲載内容はドキュメント作成時点のものであり、
+      現在または掲載時点での内容を保証するものではありません。<br/>
+    </div>
+    <h2 class="row" th:if="${mode=='new'}">新着情報</h2>
+
+    <div class="alert alert-info row" th:if="${mode=='search'}">
+      検索結果:<span th:text="${list.totalElements}"></span>件
+    </div>
+
+    <ul id="documents" class="list-group">
+      <li class="list-group-item row" th:each="doc : ${list.content}">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-9">
+            <div class="row">
+              <p class="col-sm-12">
+                <label title="文書コード" th:text="*{doc.code}">ZXX-XXXX:</label>
+                <span title="ファイル名" th:text="*{doc.fileName}">FILENAME</span>
+              </p>
+            </div>
+            <div class="row">
+              <p class="col-sm-12">
+                <span class="label" th:attrappend="class=${' label-category-' + doc.category}" th:text="*{categories[doc.category]}"></span>
+                <span title="分野" th:if="${doc.area != null}" th:text="*{areas[doc.area]}"></span> /
+                <span title="ドキュメント種類" th:text="*{purposes[doc.purpose]}"></span> /
+                <span title="成否" th:text="*{results[doc.result]}"></span>
+                <span title="成否要因" th:if="${doc.reason != null}" th:text=" (${reasons[doc.reason]})"></span>
+              </p>
+            </div>
+            <div class="row" th:if="${doc.customerName != null}">
+              <p class="col-sm-12" title="顧客名"><label th:text="*{doc.customerName}">顧客名:</label></p>
+            </div>
+            <div class="row" title="コメント" th:if="${doc.description != null}"><pre class="col-sm-12 small" th:text="*{doc.description}"></pre>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row small doc_author">
+              <span class="col-sm-12" title="担当者・発行日"
+                      ><span th:text="*{doc.authorName}"></span
+                      >・<span th:if="${doc.publishedDate != null}" th:text="${#calendars.format(doc.publishedDate,'yyyy/MM/dd')}"></span></span>
+            </div>
+            <div class="row small doc_thumbnail">
+              <a class="col-sm-12 download-link" href="/documents/" th:attrappend="href=${doc.code} + '/download'" title="ダウンロード">
+                <img src="/img/thumbnail/" th:attrappend="src=${doc.code} + '.jpg'" alt="NO IMAGE" class="img-thumbnail"/>
+                <p><span class="glyphicon glyphicon-download-alt"></span></p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div id="footer" class="navbar navbar-default navbar-fixed-bottom">
+</div>
+</div>
+<script src="/js/lib/modernizr.js"></script>
+<script src="/js/lib/jquery-1.11.2.min.js"></script>
+<script src="/js/lib/bootstrap.min.js"></script>
+<script src="/js/lib/bootstrap-datepicker.min.js"></script>
+<script src="/js/lib/bootstrap-datepicker.ja.min.js"></script>
+<script src="/js/lib/pnotify.custom.min.js"></script>
+<script>
+$(function() {
+  $.get("/link.jsp?" + Math.random(), function(data) {
+    $("#site-link").html(data);
+  });
+
+  $.get("/footer.jsp?e", function(data) {
+    $("#footer").html(data);
+  });
+
+  $("#categories input[type='checkbox']").each(function() {
+    if (this.checked) {
+      $(this).parent().removeClass('gray');
+    } else {
+      $(this).parent().addClass('gray');
+    }
+  });
+
+  $("#categories input[type='checkbox']").click(function() {
+    if (this.checked) {
+      $(this).parent().removeClass('gray');
+    } else {
+      $(this).parent().addClass('gray');
+    }
+  });
+
+  //if (!Modernizr.inputtypes.date) {
+  $('#search_published_from').datepicker({
+    format: 'yyyy/mm/dd',
+    language: 'ja'
+  });
+
+  $('#search_published_to').datepicker({
+    format: 'yyyy/mm/dd',
+    language: 'ja'
+  });
+  //}
+/*
+  var notice = new PNotify({
+        title: "運用者からのお知らせ",
+        text: "ドキュメントは全て社外秘です。",
+        cornerclass: "",
+        delay: 2000,
+        width: "40%",
+//        addclass: "stack-bottomleft",
+//        stack: "stack_bottomright",
+        type: "info",
+        animate_speed: 'fast',
+        buttons: {
+          closer: false,
+          sticker: false
+        }
+  });
+  notice.get().click(function() {
+      notice.remove();
+  });
+*/
+});
+</script>
+</body>
+</html>

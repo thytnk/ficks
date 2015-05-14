@@ -31,35 +31,72 @@ public class GuiUtils {
 
     private Sort sortByDisplayOrder = new Sort(Sort.Direction.ASC, "displayOrder");
 
-    void addDropDowns(Model mav) {
-        Map<String, String> categories = new TreeMap<>();
+    void addDropDowns(Model model) {
+        addCategories(model);
+        addAreas(model);
+        addPurposes(model);
+        addResults(model);
+        addReasons(model);
+    }
+
+    private void addCategories(Model model) {
         List<Category> categoryList = categoryRepository.findAll(sortByDisplayOrder);
+        model.addAttribute("categoryList", categoryList);
+
+        Map<String, String> categories = new TreeMap<>();
         categoryList.forEach(it -> categories.put(it.code, it.name));
-        mav.addAttribute("categories", categories);
-        mav.addAttribute("categoryList", categoryList);
+        model.addAttribute("categories", categories);
+    }
 
-        Map<String, String> areas = new TreeMap<>();
+    private void addAreas(Model model) {
         List<Area> areaList = areaRepository.findAll(sortByDisplayOrder);
-        areaList.forEach(it -> areas.put(it.id.toString(), it.name));
-        mav.addAttribute("areas", areas);
-        mav.addAttribute("areaList", areaList);
+        model.addAttribute("areaList", areaList);
 
-        Map<String, String> purposes = new TreeMap<>();
+        Map<Integer, String> areas = new TreeMap<>();
+        areaList.forEach(it -> areas.put(it.id, it.name));
+        model.addAttribute("areas", areas);
+
+        Map<String, String> areasForString = new TreeMap<>();
+        areaList.forEach(it -> areasForString.put(it.id.toString(), it.name));
+        model.addAttribute("areasForString", areasForString);
+    }
+
+    private void addPurposes(Model model) {
         List<Purpose> purposeList = purposeRepository.findAll(sortByDisplayOrder);
-        purposeList.forEach(it -> purposes.put(it.id.toString(), it.name));
-        mav.addAttribute("purposes", purposes);
-        mav.addAttribute("purposeList", purposeList);
+        model.addAttribute("purposeList", purposeList);
+
+        Map<Integer, String> purposes = new TreeMap<>();
+        purposeList.forEach(it -> purposes.put(it.id, it.name));
+        model.addAttribute("purposes", purposes);
+
+        Map<String, String> purposesForString = new TreeMap<>();
+        purposeList.forEach(it -> purposesForString.put(it.id.toString(), it.name));
+        model.addAttribute("purposesForString", purposesForString);
+    }
+
+    private void addResults(Model model) {
+        List<Result> resultList = resultRepository.findAll(sortByDisplayOrder);
+        model.addAttribute("resultList", resultList);
 
         Map<Integer, String> results = new TreeMap<>();
-        List<Result> resultList = resultRepository.findAll(sortByDisplayOrder);
         resultList.forEach(it -> results.put(it.id, it.name));
-        mav.addAttribute("results", results);
-        mav.addAttribute("resultList", resultList);
+        model.addAttribute("results", results);
+
+        Map<String, String> resultsForString = new TreeMap<>();
+        resultList.forEach(it -> resultsForString.put(it.id.toString(), it.name));
+        model.addAttribute("resultsForString", resultsForString);
+    }
+
+    private void addReasons(Model model) {
+        List<Reason> reasonList = reasonRepository.findAll(sortByDisplayOrder);
+        model.addAttribute("reasonList", reasonList);
 
         Map<Integer, String> reasons = new TreeMap<>();
-        List<Reason> reasonList = reasonRepository.findAll(sortByDisplayOrder);
         reasonList.forEach(it -> reasons.put(it.id, it.name));
-        mav.addAttribute("reasons", reasons);
-        mav.addAttribute("reasonList", reasonList);
+        model.addAttribute("reasons", reasons);
+
+        Map<String, String> reasonsForString = new TreeMap<>();
+        reasonList.forEach(it -> reasonsForString.put(it.id.toString(), it.name));
+        model.addAttribute("reasonsForString", reasonsForString);
     }
 }
