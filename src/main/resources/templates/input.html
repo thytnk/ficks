@@ -11,12 +11,8 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css"/>
   <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
   <link rel="stylesheet" href="/css/lib/pnotify.custom.min.css"/>
-  <!--
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
-  -->
   <link rel="stylesheet" href="/css/screen.css?a"/>
-  <link rel="shortcut icon" href="favicon.ico"/><!--
-  <style><jsp:include page="css.jsp"/></style>-->
+  <link rel="shortcut icon" href="favicon.ico"/>
 
   <!--[if lt IE 9]>
   <script src="/js/lib/html5shiv.min.js"></script>
@@ -46,78 +42,92 @@
 </nav>
 <div class="container">
   <div class="row small">
-    <form id="add" th:action="@{/form}" th:object="${documentAddCommand}" method="post">
+    <form id="add" th:action="@{/form}" th:object="${document}"
+          method="post" enctype="multipart/form-data" class="form-horizontal">
 
-      <div id="categories" class="row container">
+      <p class="form-group">
+        <label class="control-label">種類別</label>
         <div class="col-sm-8 row btn-group">
-          <label class="col-sm-2 btn ">btn-category-A<input type="radio" th:field="*{category}" th:value="A"/> 提案資料</label>
-          <label class="col-sm-2 btn ">btn-category-B<input type="radio" th:field="*{category}" th:value="B"/> 技術資料</label>
-          <label class="col-sm-2 btn ">btn-category-C<input type="radio" th:field="*{category}" th:value="C"/> 設定資料</label>
-          <label class="col-sm-2 btn ">btn-category-D<input type="radio" th:field="*{category}" th:value="D"/> 手順資料</label>
-          <label class="col-sm-2 btn ">btn-category-E<input type="radio" th:field="*{category}" th:value="E"/> 業務関連</label>
+          <label class="col-sm-2 btn btn-category-A"><input type="radio" th:field="*{category}" th:value="A"/> 提案資料</label>
+          <label class="col-sm-2 btn btn-category-B"><input type="radio" th:field="*{category}" th:value="B"/> 技術資料</label>
+          <label class="col-sm-2 btn btn-category-C"><input type="radio" th:field="*{category}" th:value="C"/> 設定資料</label>
+          <label class="col-sm-2 btn btn-category-D"><input type="radio" th:field="*{category}" th:value="D"/> 手順資料</label>
+          <label class="col-sm-2 btn btn-category-E"><input type="radio" th:field="*{category}" th:value="E"/> 業務関連</label>
         </div>
-      </div>
+      </p>
 
-      <div class="row">
-        <p class="col-sm-2 form-group">
-          <label class="control-label" for="search_area">分野</label>
-          <select id="search_area" th:field="*{area}" class="form-control input-sm">
-            <option th:each="a : ${areaList}" th:value="${a.id}" th:text="${a.name}"/>
-          </select>
-        </p>
-        <p class="col-sm-2 form-group">
-          <label class="control-label" for="search_purpose">ドキュメント種類</label>
-          <select id="search_purpose" th:field="*{purpose}" class="form-control input-sm">
-            <option th:each="p : ${purposeList}" th:value="${p.id}" th:text="${p.name}"/>
-          </select>
-        </p>
-        <p class="col-sm-3 form-group">
-          <label class="control-label" for="search_customer">顧客名</label>
-          <input type="text" id="search_customer" th:field="*{customerName}" class="form-control input-sm"/>
-        </p>
-        <p class="col-sm-2 form-group">
-          <label class="control-label" for="search_author">担当者</label>
-          <input type="text" id="search_author" th:field="*{authorName}" class="form-control input-sm"/>
-        </p>
-        <p class="col-sm-1 form-group">
-          <label class="control-label" for="search_result">成否</label>
-          <select id="search_result" th:field="*{result}" class="form-control input-sm">
-            <option value="">&nbsp;</option>
-            <option th:each="r : ${resultList}" th:value="${r.id}" th:text="${r.name}"/>
-          </select>
-        </p>
-        <p class="col-sm-2 form-group">
-          <label class="control-label" for="search_reason">成否要因</label>
-          <select id="search_reason" th:field="*{reason}" class="form-control input-sm">
-            <option value=""></option>
-            <option th:each="r : ${reasonList}" th:value="${r.id}" th:text="${r.name}"/>
-          </select>
-        </p>
-      </div>
+      <p class="form-group">
+        <label class="control-label" for="search_area">分野</label>
+        <select id="search_area" th:field="*{area}" class="form-control input-sm">
+          <option th:each="a : ${areaList}" th:value="${a.id}" th:text="${a.name}"/>
+        </select>
+        <p class="help-block" th:if="${#fields.hasErrors('area')}" th:errors="*{area}"></p>
+      </p>
+      <p class="form-group">
+        <label class="control-label" for="search_purpose">ドキュメント種類</label>
+        <select id="search_purpose" th:field="*{purpose}" class="form-control input-sm">
+          <option th:each="p : ${purposeList}" th:value="${p.id}" th:text="${p.name}"/>
+        </select>
+        <p class="help-block" th:if="${#fields.hasErrors('purpose')}" th:errors="*{purpose}"></p>
+      </p>
+      <p class="form-group">
+        <label class="control-label" for="search_customer">顧客名</label>
+        <input type="text" id="search_customer" th:field="*{customerName}" class="form-control input-sm"/>
+        <p class="help-block" th:if="${#fields.hasErrors('customerName')}" th:errors="*{customerName}"></p>
+      </p>
+      <p class="form-group">
+        <label class="control-label" for="search_author">担当者</label>
+        <input type="text" id="search_author" th:field="*{authorName}" class="form-control input-sm"/>
+        <p class="help-block" th:if="${#fields.hasErrors('authorName')}" th:errors="*{authorName}"></p>
+      </p>
+      <p class="form-group">
+        <label class="control-label" for="search_result">成否</label>
+        <select id="search_result" th:field="*{result}" class="form-control input-sm">
+          <option value="">&nbsp;</option>
+          <option th:each="r : ${resultList}" th:value="${r.id}" th:text="${r.name}"/>
+        </select>
+        <p class="help-block" th:if="${#fields.hasErrors('result')}" th:errors="*{result}"></p>
+      </p>
+      <p class="form-group">
+        <label class="control-label" for="search_reason">成否要因</label>
+        <select id="search_reason" th:field="*{reason}" class="form-control input-sm">
+          <option value=""></option>
+          <option th:each="r : ${reasonList}" th:value="${r.id}" th:text="${r.name}"/>
+        </select>
+        <p class="help-block" th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}"></p>
+      </p>
 
-      <div class="row">
-        <div class="col-sm-3">
-          <label class="control-label" for="empNumber">従業員番号</label>
-          <input type="text" id="empNumber" th:field="*{empNumber}" class="form-control"/>
-        </div>
+      <p class="form-group">
+        <label class="control-label" for="empNumber">従業員番号</label>
+        <input type="text" id="empNumber" th:field="*{empNumber}" class="form-control"/>
+        <p class="help-block" th:if="${#fields.hasErrors('empNumber')}" th:errors="*{empNumber}"></p>
+      </p>
 
-        <div class="col-sm-3">
-          <label class="control-label" for="description">コメント</label>
-          <textarea id="description" th:field="*{description}" class="form-control"></textarea>
-          <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Name Error</p>
-        </div>
+      <p class="form-group">
+        <label class="control-label" for="description">コメント</label>
+        <textarea id="description" th:field="*{description}" class="form-control"></textarea>
+        <p class="help-block" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+      </p>
 
-        <div class="col-sm-3">
-          <label class="control-label" for="publishedDate">発行日</label>
-          <input type="text" id="publishedDate" th:field="*{publishedDate}" class="form-control"/>
-        </div>
+      <p class="form-group">
+        <label class="control-label" for="publishDate">発行日</label>
+        <input type="text" id="publishDate" th:field="*{publishDate}" class="form-control"/>
+        <p class="help-block" th:if="${#fields.hasErrors('publishDate')}" th:errors="*{publishDate}"></p>
+      </p>
 
-        <p class="col-sm-2 form-group">
-          <label class="control-label">&nbsp;</label>
-          <button type="submit" id="searchButton" class="form-control btn btn-primary">登録</button>
-        </p>
-      </div>
+      <p class="form-group">
+        <label class="control-label">サムネイル縦横</label>
+        <label><input type="radio" th:field="*{printDirection}" th:value="Vertical"/> 横向き</label>
+        <label><input type="radio" th:field="*{printDirection}" th:value="Horizontal"/> 縦向き</label>
+        <p class="help-block" th:if="${#fields.hasErrors('printDirection')}" th:errors="*{printDirection}"></p>
+      </p>
 
+      <p class="form-group">
+        <label class="control-label" for="file">ファイル</label>
+        <input type="file" id="file" name="file"/>
+      </p>
+
+      <button type="submit" id="searchButton" class="form-control btn btn-primary">登録</button>
     </form>
   </div>
 
@@ -134,24 +144,10 @@
 <script src="/js/lib/pnotify.custom.min.js"></script>
 <script>
 $(function() {
-  $.get("/link.jsp?" + Math.random(), function(data) {
-    $("#site-link").html(data);
-  });
-
-  $.get("/footer.jsp?e", function(data) {
-    $("#footer").html(data);
-  });
-
-  $('#search_published_from').datepicker({
+  $('#publishDate').datepicker({
     format: 'yyyy/mm/dd',
     language: 'ja'
   });
-
-  $('#search_published_to').datepicker({
-    format: 'yyyy/mm/dd',
-    language: 'ja'
-  });
-
 });
 </script>
 </body>

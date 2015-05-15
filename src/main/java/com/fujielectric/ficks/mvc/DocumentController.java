@@ -12,24 +12,16 @@ import org.springframework.data.solr.core.query.*;
 
 import org.springframework.data.solr.core.query.result.FacetFieldEntry;
 import org.springframework.data.solr.core.query.result.FacetPage;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @RequestMapping("/documents")
@@ -48,7 +40,7 @@ public class DocumentController extends WebMvcConfigurerAdapter {
     @RequestMapping(method=GET)
     public String home(DocumentSearchCommand documentSearchCommand, Model model) {
         Query query = new SimpleQuery(new Criteria("id").isNotNull());
-        query.addSort(sortByPublishedDate());
+        query.addSort(sortByPublishDate());
         Page resultPage = solrTemplate.queryForPage(query, Document.class);
 
         List<Document> docs = resultPage.getContent();
@@ -64,7 +56,7 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         log.info("search: {}", documentSearchCommand);
         FacetQuery query = new SimpleFacetQuery(documentSearchCommand.searchCriteria());
         query.setFacetOptions(new FacetOptions().addFacetOnField("doc_area").addFacetOnField("doc_purpose"));
-        query.addSort(sortByPublishedDate());
+        query.addSort(sortByPublishDate());
         query.setRows(100);
         FacetPage<Document> resultPage = solrTemplate.queryForFacetPage(query, Document.class);
 
@@ -95,7 +87,7 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         if (doc == null)
             return;
 
-        File file = new File(doc.id);
+        File file = new File(doc.resourceName);
         String dFilename = new String(file.getName().getBytes("Windows-31J"), "ISO-8859-1");
         res.reset();
         res.setHeader("Content-Transfer-Encoding", "binary");
@@ -114,7 +106,7 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         os.close();
     }
 
-    private Sort sortByPublishedDate() {
+    private Sort sortByPublishDate() {
         return new Sort(Sort.Direction.DESC, "doc_publish_date");
     }
 /*

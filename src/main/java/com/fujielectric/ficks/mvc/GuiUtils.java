@@ -1,16 +1,15 @@
 package com.fujielectric.ficks.mvc;
 
 import com.fujielectric.ficks.domain.*;
+import com.fujielectric.ficks.jpa.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 @Component
 public class GuiUtils {
