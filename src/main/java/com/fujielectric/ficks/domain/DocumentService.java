@@ -1,6 +1,7 @@
 package com.fujielectric.ficks.domain;
 
 import com.fujielectric.ficks.jpa.DocumentRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,27 +41,37 @@ public class DocumentService {
     }
 
     private void saveData(Document document, String fileName) {
-        document.code = documentCode(document);
+//        document.code = documentCode(document);
         document.fileName = fileName;
-        document.registerDate = new Date();
+//        document.registerDate = new Date();
         repository.save(document);
+        repository.flush(); // 連番生成のためflushの必要あり
+
+
     }
 
-    /**
+    /*
      * Zyy-00009-09 形式で文書管理番号を採番する
      * 種類別+年2桁-連番5桁-枝番2桁
-     */
+
     private String documentCode(Document document) {
+        // 連番5桁の取得
+        Date baseDate = new Date();
+        Long countThisYear = repository.countDocumentThisYear(baseDate);
+        //Integer countThisYear = 100;
+        String serial = StringUtils.leftPad((countThisYear++).toString(), 5, '0');
+
         return new StringBuilder()
                 .append(document.category)
-                .append(LocalDate.now().getYear() - 2000)
+                .append(LocalDate.now().getYear() % 100)
                 .append('-')
-                .append(LocalDateTime.now().getMinute())
-                .append(LocalDateTime.now().getSecond())
+                .append(serial)
+                //.append(LocalDateTime.now().getMinute())
+                //.append(LocalDateTime.now().getSecond())
                 .append('-')
                 .append("01")
                 .toString();
-    }
+    }*/
 
     private void saveFile(Document document, byte[] fileData) {
         File file = prepareFile(document);
@@ -75,7 +86,7 @@ public class DocumentService {
 
     /** ファイルの保存先ディレクトリ */
     public File prepareFile(Document document) {
-        if (document.code == null || document.fileName == null)
+        if (document.getDocumentCode() == null || document.fileName == null)
             throw new IllegalStateException();
 
         String rootDirectory = environment.getRequiredProperty(DOCUMENT_ROOT);

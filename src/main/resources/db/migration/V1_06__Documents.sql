@@ -1,6 +1,9 @@
 create table Documents (
     document_id     serial       not null primary key
-  , code            char(12)     not null unique
+  , code            char(12)              unique
+  , large_code      int          not null
+  , small_code      serial       not null
+  , revision        int          not null
   , category        char(1)      not null references categories(code)
   , purpose         int          not null references purposes(purpose_id)
   , area            int          not null references areas(area_id)

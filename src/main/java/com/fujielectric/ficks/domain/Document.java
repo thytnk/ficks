@@ -1,7 +1,10 @@
 package com.fujielectric.ficks.domain;
 
 import lombok.Data;
+import static org.apache.commons.lang3.StringUtils.leftPad;
 import org.apache.solr.client.solrj.beans.Field;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.solr.core.mapping.Indexed;
 
@@ -10,20 +13,45 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
-@Entity(name="documents")
+@Entity
+@Table(name="documents")
 @Data
 public class Document {
 
     @Indexed @Field
     @Id @Column(name="document_id")
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="documents_seq")
-    @SequenceGenerator(name="documents_seq", sequenceName = "documents_document_id_seq")
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="documents_id_seq")
+    @SequenceGenerator(name="documents_id_seq", sequenceName = "documents_document_id_seq")
     public Long id;
 
+    /** 登録年: 登録時に生成 */
+    public Integer largeCode;
+
+    /** 連番: 登録時に生成 */
+    @Generated(GenerationTime.INSERT)
+    @Column(name="small_code", insertable=false, updatable=false)
+    public Integer smallCode;
+
+    /** リビジョン: 登録時に生成、更新時にインクリメント */
+    public Integer revision;
+
     /** 管理番号 */
+    @Transient
+    public String getDocumentCode() {
+        return new StringBuilder()
+                .append(category)
+                .append(largeCode % 100)
+                .append('-')
+                .append(leftPad(String.valueOf(smallCode % 100_000).toString(), 5, '0'))
+                .append('-')
+                .append(leftPad(String.valueOf(revision % 100).toString(), 2, '0'))
+                .toString();
+    }
+
+    /** 管理番号 (Solr使用時) */
     @Indexed @Field("doc_code")
     public String code;
 
@@ -105,7 +133,7 @@ public class Document {
     @Transient
     @Indexed @Field("resourcename")
     public String resourceName;
-
+/*
     @Transient
     @Indexed @Field("content_type")
     public List<String> contentType;
@@ -113,7 +141,7 @@ public class Document {
     @Transient
     @Indexed @Field("last_modified")
     public String lastModified;
-
+*/
     @Transient
     public String getFileName() {
         if (resourceName != null) {
@@ -124,6 +152,17 @@ public class Document {
         return "";
     }
 
+    @SuppressWarnings("UnusedDeclaration")
+    @PrePersist void onPrePersist() {
+        largeCode = LocalDate.now().getYear() % 100;
+        revision = 1;
+        registerDate = new Date();
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    @PostPersist void onPostPersist() {
+        code = getDocumentCode();
+    }
 
     @Override
     public String toString() {
