@@ -1,0 +1,1 @@
+groovy postindex.groovy -Dgroovy.source.encoding=UTF-8
