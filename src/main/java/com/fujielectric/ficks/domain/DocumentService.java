@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.solr.core.SolrOperations;
+import org.springframework.data.solr.core.query.PartialUpdate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,6 +32,10 @@ public class DocumentService {
     @Autowired
     DocumentRepository repository;
 
+
+    @Autowired
+    private SolrOperations solrTemplate;
+
     @Transactional
     public void saveDataAndFile(Document document, String fileName, byte[] fileData) {
         log.info("go add");
@@ -41,37 +47,10 @@ public class DocumentService {
     }
 
     private void saveData(Document document, String fileName) {
-//        document.code = documentCode(document);
         document.fileName = fileName;
-//        document.registerDate = new Date();
         repository.save(document);
         repository.flush(); // 連番生成のためflushの必要あり
-
-
     }
-
-    /*
-     * Zyy-00009-09 形式で文書管理番号を採番する
-     * 種類別+年2桁-連番5桁-枝番2桁
-
-    private String documentCode(Document document) {
-        // 連番5桁の取得
-        Date baseDate = new Date();
-        Long countThisYear = repository.countDocumentThisYear(baseDate);
-        //Integer countThisYear = 100;
-        String serial = StringUtils.leftPad((countThisYear++).toString(), 5, '0');
-
-        return new StringBuilder()
-                .append(document.category)
-                .append(LocalDate.now().getYear() % 100)
-                .append('-')
-                .append(serial)
-                //.append(LocalDateTime.now().getMinute())
-                //.append(LocalDateTime.now().getSecond())
-                .append('-')
-                .append("01")
-                .toString();
-    }*/
 
     private void saveFile(Document document, byte[] fileData) {
         File file = prepareFile(document);
@@ -93,5 +72,24 @@ public class DocumentService {
         File parent = Paths.get(rootDirectory, document.code).toFile();
         parent.mkdir();
         return Paths.get(rootDirectory, document.code, document.fileName).toFile();
+    }
+
+    /** 文書のインデックスを更新 */
+    public void updateIndex(Document document) {
+        PartialUpdate update = new PartialUpdate("id", document.id);
+        update.setValueOfField("doc_code", document.code);
+        update.setValueOfField("doc_category", document.category);
+        update.setValueOfField("doc_area", document.area);
+        update.setValueOfField("doc_purpose", document.purpose);
+        update.setValueOfField("doc_result", document.result);
+        update.setValueOfField("doc_reason", document.reason);
+        update.setValueOfField("doc_dept_name", document.deptName);
+        update.setValueOfField("doc_emp_number", document.empNumber);
+        update.setValueOfField("doc_publish_date", document.publishDate);
+        update.setValueOfField("doc_author_name", document.authorName);
+        update.setValueOfField("doc_description", document.description);
+        update.setValueOfField("doc_customer_name", document.customerName);
+        solrTemplate.saveBean(update);
+        solrTemplate.commit();
     }
 }

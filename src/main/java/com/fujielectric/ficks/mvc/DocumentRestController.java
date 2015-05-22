@@ -1,61 +1,37 @@
 package com.fujielectric.ficks.mvc;
 
 import com.fujielectric.ficks.domain.Document;
-import com.fujielectric.ficks.solr.SolrDocumentRepository;
+import com.fujielectric.ficks.domain.DocumentService;
+import com.fujielectric.ficks.jpa.DocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-@RequestMapping("/rest/documents")
+@RequestMapping("/api/documents")
 public class DocumentRestController {
     private Logger log = LoggerFactory.getLogger(DocumentRestController.class);
 
     @Autowired
-    private SolrDocumentRepository documentRepository;
+    private DocumentRepository jpaRepository;
 
-//    @RequestMapping(method=GET)
-    public Iterable<Document> getAll() {
-        log.info("getAll");
-        Iterable<Document> docs =  documentRepository.findAll();
-        for (Document doc: docs) {
-            System.out.println(doc);
-        }
-        return docs;
-    }
+    @Autowired
+    private DocumentService documentService;
 
-    @RequestMapping(method=GET)
-    public List<Document> getAllDocuments(@RequestParam Map<String, String> params) {
-        log.info("getAllDocuments");
-        params.keySet().forEach(k -> log.info("{} = {}", k, params.get(k)));
-        String text = params.get("text");
-
-//        if (text != null && !text.isEmpty()) {
-  //          log.info("text:{}", text);
-    //        return documentRepository.findByText(text);
-      //  } else {
-            List<Document> docs = new ArrayList<>();
-            documentRepository.findAll().forEach(d -> docs.add(d));
-            return docs;
-        //}
-    }
-
-//    @RequestMapping(value="/{category}",method=GET)
-    public List<Document> getByCategory(@PathVariable("category") String category) {
-        log.info("getByCategory category={}", category);
-//        List<Document> docs = documentRepository.findByCategory(category);
-        List<Document> docs = null;
-        //docs.forEach(d -> log.info("category={}",d.category));
-        return docs;
+    @ResponseStatus(OK)
+    @RequestMapping(value="{code}/index", method=GET)
+    public void updateIndex(@PathVariable("code") String code) {
+        Optional<Document> opt = jpaRepository.findByCode(code);
+        opt.ifPresent(document -> {
+            documentService.updateIndex(document);
+            log.info("インデックスを更新しました: {}", code);
+        });
     }
 }
