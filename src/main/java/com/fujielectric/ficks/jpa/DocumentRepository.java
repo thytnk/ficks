@@ -10,11 +10,8 @@ import java.util.Optional;
 
 public interface DocumentRepository extends JpaRepository<Document, Long> {
 
-//    @Query("SELECT d FROM Document AS d WHERE d.registerDate > :baseDate ")
-//    public Long hoge();
-
-    @Query("SELECT COUNT(*) FROM Document AS d WHERE d.registerDate > :baseDate ")
-    public Long countDocumentThisYear(@Param("baseDate") Date baseDate);
+//    @Query("SELECT COUNT(*) FROM Document AS d WHERE d.registerDate > :baseDate ")
+//    public Long countDocumentThisYear(@Param("baseDate") Date baseDate);
 
     public Optional<Document> findByCode(String code);
 }

@@ -12,7 +12,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -39,8 +38,7 @@ public class Document {
     public Integer revision;
 
     /** 管理番号 */
-    @Transient
-    public String getDocumentCode() {
+    String documentCode() {
         return new StringBuilder()
                 .append(category)
                 .append(largeCode % 100)
@@ -103,6 +101,7 @@ public class Document {
     public Date publishDate;
 
     /** ファイル名 */
+    @Indexed @Field("doc_file_name")
     public String fileName;
 
     /** 登録日 */
@@ -130,11 +129,11 @@ public class Document {
     /** Solrインデックス日時 */
     @Temporal(TemporalType.DATE)
     public Date indexDate;
-
+/*
     @Transient
     @Indexed @Field("resourcename")
     public String resourceName;
-/*
+
     @Transient
     @Indexed @Field("content_type")
     public List<String> contentType;
@@ -143,15 +142,15 @@ public class Document {
     @Indexed @Field("last_modified")
     public String lastModified;
 */
-    @Transient
-    public String getFileName() {
-        if (resourceName != null) {
-            return Paths.get(resourceName).getFileName().toString();
-        } /*else if (id != null) {
-            return Paths.get(id).getFileName().toString();
-        }*/
-        return "";
-    }
+    //@Transient
+    //public String getFileName() {
+    //    if (resourceName != null) {
+    //        return Paths.get(resourceName).getFileName().toString();
+    //    } /*else if (id != null) {
+    //        return Paths.get(id).getFileName().toString();
+    //    }*/
+    //    return "";
+    //}
 
     @SuppressWarnings("UnusedDeclaration")
     @PrePersist void onPrePersist() {
@@ -162,7 +161,7 @@ public class Document {
 
     @SuppressWarnings("UnusedDeclaration")
     @PostPersist void onPostPersist() {
-        code = getDocumentCode();
+        code = documentCode();
     }
 
     @Override

@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class DocumentService {
@@ -65,7 +66,7 @@ public class DocumentService {
 
     /** ファイルの保存先ディレクトリ */
     public File prepareFile(Document document) {
-        if (document.getDocumentCode() == null || document.fileName == null)
+        if (document.documentCode() == null || document.fileName == null)
             throw new IllegalStateException();
 
         String rootDirectory = environment.getRequiredProperty(DOCUMENT_ROOT);
@@ -83,13 +84,25 @@ public class DocumentService {
         update.setValueOfField("doc_purpose", document.purpose);
         update.setValueOfField("doc_result", document.result);
         update.setValueOfField("doc_reason", document.reason);
+        update.setValueOfField("doc_file_name", document.fileName);
         update.setValueOfField("doc_dept_name", document.deptName);
         update.setValueOfField("doc_emp_number", document.empNumber);
         update.setValueOfField("doc_publish_date", document.publishDate);
+        update.setValueOfField("doc_register_date", document.registerDate);
         update.setValueOfField("doc_author_name", document.authorName);
         update.setValueOfField("doc_description", document.description);
         update.setValueOfField("doc_customer_name", document.customerName);
+
         solrTemplate.saveBean(update);
         solrTemplate.commit();
+    }
+
+    public Path getPathOf(String code) {
+        Optional<Document> opt = repository.findByCode(code);
+        if (opt.isPresent()) {
+            String rootDirectory = environment.getRequiredProperty(DOCUMENT_ROOT);
+            return Paths.get(rootDirectory, opt.get().code, opt.get().fileName);
+        }
+        throw new NullPointerException();
     }
 }

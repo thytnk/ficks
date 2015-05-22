@@ -19,6 +19,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -37,10 +39,13 @@ public class DocumentController extends WebMvcConfigurerAdapter {
     @Autowired
     private GuiUtils gui;
 
+    @Autowired
+    private DocumentService documentService;
+
     @RequestMapping(method=GET)
     public String home(DocumentSearchCommand documentSearchCommand, Model model) {
         Query query = new SimpleQuery(new Criteria("id").isNotNull());
-        query.addSort(sortByPublishDate());
+        query.addSort(sortByRegisterDate());
         Page resultPage = solrTemplate.queryForPage(query, Document.class);
 
         List<Document> docs = resultPage.getContent();
@@ -56,7 +61,7 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         log.info("search: {}", documentSearchCommand);
         FacetQuery query = new SimpleFacetQuery(documentSearchCommand.searchCriteria());
         query.setFacetOptions(new FacetOptions().addFacetOnField("doc_area").addFacetOnField("doc_purpose"));
-        query.addSort(sortByPublishDate());
+        query.addSort(sortByRegisterDate());
         query.setRows(100);
         FacetPage<Document> resultPage = solrTemplate.queryForFacetPage(query, Document.class);
 
@@ -87,15 +92,16 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         if (doc == null)
             return;
 
-        File file = new File(doc.resourceName);
-        String dFilename = new String(file.getName().getBytes("Windows-31J"), "ISO-8859-1");
+        Path path = documentService.getPathOf(code);
+        String dFilename = new String(doc.fileName.getBytes("Windows-31J"), "ISO-8859-1");
         res.reset();
         res.setHeader("Content-Transfer-Encoding", "binary");
         res.setHeader("Content-Disposition", "attachment; filename=" + dFilename);
 
         OutputStream os = res.getOutputStream();
 
-        InputStream in = new FileInputStream(file);
+        InputStream in = Files.newInputStream(path);
+        //InputStream in = new FileInputStream(file);
 
         byte[] b = new byte[1024];
         int len;
@@ -106,8 +112,8 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         os.close();
     }
 
-    private Sort sortByPublishDate() {
-        return new Sort(Sort.Direction.DESC, "doc_publish_date");
+    private Sort sortByRegisterDate() {
+        return new Sort(Sort.Direction.DESC, "doc_register_date");
     }
 /*
     @ExceptionHandler(MethodArgumentNotValidException.class)
