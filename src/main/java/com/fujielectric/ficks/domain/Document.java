@@ -120,6 +120,7 @@ public class Document {
 
     /** サムネイル印刷方向 */
     @NotNull
+    @Enumerated(EnumType.STRING)
     public PrintDirection printDirection;
 
     /** サムネイル印刷日時 */

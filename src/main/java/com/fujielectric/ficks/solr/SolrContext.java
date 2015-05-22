@@ -1,6 +1,5 @@
 package com.fujielectric.ficks.solr;
 
-import com.fujielectric.ficks.domain.Document;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +10,6 @@ import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 
 import javax.annotation.Resource;
-import java.util.Hashtable;
-import java.util.Map;
 
 @Configuration
 @EnableSolrRepositories(basePackages={"com.fujielectric.ficks.solr"}, multicoreSupport=true)
@@ -33,6 +30,4 @@ public class SolrContext {
     public SolrOperations solrTemplate() {
         return new SolrTemplate(solrServer());
     }
-
-
 }

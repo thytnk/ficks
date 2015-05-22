@@ -98,6 +98,12 @@
       </p>
 
       <p class="form-group">
+        <label class="control-label" for="deptName">部門名</label>
+        <input type="text" id="deptName" th:field="*{deptName}" class="form-control"/>
+        <p class="help-block" th:if="${#fields.hasErrors('deptName')}" th:errors="*{deptName}"></p>
+      </p>
+
+      <p class="form-group">
         <label class="control-label" for="empNumber">従業員番号</label>
         <input type="text" id="empNumber" th:field="*{empNumber}" class="form-control"/>
         <p class="help-block" th:if="${#fields.hasErrors('empNumber')}" th:errors="*{empNumber}"></p>
