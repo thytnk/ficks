@@ -43,7 +43,7 @@ public class GuiUtils {
         model.addAttribute("categoryList", categoryList);
 
         Map<String, String> categories = new TreeMap<>();
-        categoryList.forEach(it -> categories.put(it.code, it.name));
+        categoryList.forEach(it -> categories.put(it.getCode(), it.getName()));
         model.addAttribute("categories", categories);
     }
 
@@ -52,11 +52,11 @@ public class GuiUtils {
         model.addAttribute("areaList", areaList);
 
         Map<Integer, String> areas = new TreeMap<>();
-        areaList.forEach(it -> areas.put(it.id, it.name));
+        areaList.forEach(it -> areas.put(it.getId(), it.getName()));
         model.addAttribute("areas", areas);
 
         Map<String, String> areasForString = new TreeMap<>();
-        areaList.forEach(it -> areasForString.put(it.id.toString(), it.name));
+        areaList.forEach(it -> areasForString.put(it.getId().toString(), it.getName()));
         model.addAttribute("areasForString", areasForString);
     }
 
@@ -65,11 +65,11 @@ public class GuiUtils {
         model.addAttribute("purposeList", purposeList);
 
         Map<Integer, String> purposes = new TreeMap<>();
-        purposeList.forEach(it -> purposes.put(it.id, it.name));
+        purposeList.forEach(it -> purposes.put(it.getId(), it.getName()));
         model.addAttribute("purposes", purposes);
 
         Map<String, String> purposesForString = new TreeMap<>();
-        purposeList.forEach(it -> purposesForString.put(it.id.toString(), it.name));
+        purposeList.forEach(it -> purposesForString.put(it.getId().toString(), it.getName()));
         model.addAttribute("purposesForString", purposesForString);
     }
 
@@ -78,11 +78,11 @@ public class GuiUtils {
         model.addAttribute("resultList", resultList);
 
         Map<Integer, String> results = new TreeMap<>();
-        resultList.forEach(it -> results.put(it.id, it.name));
+        resultList.forEach(it -> results.put(it.getId(), it.getName()));
         model.addAttribute("results", results);
 
         Map<String, String> resultsForString = new TreeMap<>();
-        resultList.forEach(it -> resultsForString.put(it.id.toString(), it.name));
+        resultList.forEach(it -> resultsForString.put(it.getId().toString(), it.getName()));
         model.addAttribute("resultsForString", resultsForString);
     }
 
@@ -91,11 +91,11 @@ public class GuiUtils {
         model.addAttribute("reasonList", reasonList);
 
         Map<Integer, String> reasons = new TreeMap<>();
-        reasonList.forEach(it -> reasons.put(it.id, it.name));
+        reasonList.forEach(it -> reasons.put(it.getId(), it.getName()));
         model.addAttribute("reasons", reasons);
 
         Map<String, String> reasonsForString = new TreeMap<>();
-        reasonList.forEach(it -> reasonsForString.put(it.id.toString(), it.name));
+        reasonList.forEach(it -> reasonsForString.put(it.getId().toString(), it.getName()));
         model.addAttribute("reasonsForString", reasonsForString);
     }
 }

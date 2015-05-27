@@ -24,18 +24,18 @@ public class Document {
     @Id @Column(name="document_id")
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="documents_id_seq")
     @SequenceGenerator(name="documents_id_seq", sequenceName = "documents_document_id_seq")
-    public Long id;
+    private Long id;
 
     /** 登録年: 登録時に生成 */
-    public Integer largeCode;
+    private Integer largeCode;
 
     /** 連番: 登録時に生成 */
     @Generated(GenerationTime.INSERT)
     @Column(name="small_code", insertable=false, updatable=false)
-    public Integer smallCode;
+    private Integer smallCode;
 
     /** リビジョン: 登録時に生成、更新時にインクリメント */
-    public Integer revision;
+    private Integer revision;
 
     /** 管理番号 */
     String documentCode() {
@@ -51,84 +51,84 @@ public class Document {
 
     /** 管理番号 (Solr使用時) */
     @Indexed @Field("doc_code")
-    public String code;
+    private String code;
 
     /** 資料別 */
     @Indexed @Field("doc_category")
     @NotBlank @Pattern(regexp = "[A-Z]")
-    public String category;
+    private String category;
 
     /** 種類 */
     @Indexed @Field("doc_purpose")
     @NotNull
-    public Integer purpose;
+    private Integer purpose;
 
     /** 分野 */
     @Indexed @Field("doc_area")
     @NotNull
-    public Integer area;
+    private Integer area;
 
     /** 成否 */
     @Indexed @Field("doc_result")
     @NotNull
-    public Integer result;
+    private Integer result;
 
     /** 成否要因 */
     @Indexed @Field("doc_reason")
     @NotNull
-    public Integer reason;
+    private Integer reason;
 
     /** 部署名 */
     @Indexed @Field("doc_dept_name")
-    public String deptName;
+    private String deptName;
 
     /** 従業員番号 */
     @Indexed @Field("doc_emp_number")
-    public String empNumber;
+    private String empNumber;
 
     /** 担当者名 */
     @Indexed @Field("doc_author_name")
-    public String authorName;
+    private String authorName;
 
     /** コメント */
     @Indexed @Field("doc_description")
-    public String description;
+    private String description;
 
     /** 発行日 */
     @Indexed @Field("doc_publish_date")
     @Temporal(TemporalType.DATE)
     @Past
-    public Date publishDate;
+    private Date publishDate;
 
     /** ファイル名 */
     @Indexed @Field("doc_file_name")
-    public String fileName;
+    private String fileName;
 
     /** 登録日 */
     @Indexed @Field("doc_register_date")
     @Temporal(TemporalType.DATE)
-    public Date registerDate;
+    private Date registerDate;
 
     /** 顧客名 */
     @Indexed @Field("doc_customer_name")
-    public String customerName;
+    private String customerName;
 
     /** 論理削除 */
     @Indexed @Field("doc_disabled")
-    public boolean disabled;
+    private boolean disabled;
 
     /** サムネイル印刷方向 */
     @NotNull
     @Enumerated(EnumType.STRING)
-    public PrintDirection printDirection;
+    private PrintDirection printDirection;
 
     /** サムネイル印刷日時 */
     @Temporal(TemporalType.DATE)
-    public Date printDate;
+    private Date printDate;
 
     /** Solrインデックス日時 */
     @Temporal(TemporalType.DATE)
-    public Date indexDate;
+    private Date indexDate;
 /*
     @Transient
     @Indexed @Field("resourcename")

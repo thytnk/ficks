@@ -48,7 +48,7 @@ public class DocumentService {
     }
 
     private void saveData(Document document, String fileName) {
-        document.fileName = fileName;
+        document.setFileName(fileName);
         repository.save(document);
         repository.flush(); // 連番生成のためflushの必要あり
     }
@@ -66,32 +66,32 @@ public class DocumentService {
 
     /** ファイルの保存先ディレクトリ */
     public File prepareFile(Document document) {
-        if (document.documentCode() == null || document.fileName == null)
+        if (document.documentCode() == null || document.getFileName() == null)
             throw new IllegalStateException();
 
         String rootDirectory = environment.getRequiredProperty(DOCUMENT_ROOT);
-        File parent = Paths.get(rootDirectory, document.code).toFile();
+        File parent = Paths.get(rootDirectory, document.getCode()).toFile();
         parent.mkdir();
-        return Paths.get(rootDirectory, document.code, document.fileName).toFile();
+        return Paths.get(rootDirectory, document.getCode(), document.getFileName()).toFile();
     }
 
     /** 文書のインデックスを更新 */
     public void updateIndex(Document document) {
-        PartialUpdate update = new PartialUpdate("id", document.id);
-        update.setValueOfField("doc_code", document.code);
-        update.setValueOfField("doc_category", document.category);
-        update.setValueOfField("doc_area", document.area);
-        update.setValueOfField("doc_purpose", document.purpose);
-        update.setValueOfField("doc_result", document.result);
-        update.setValueOfField("doc_reason", document.reason);
-        update.setValueOfField("doc_file_name", document.fileName);
-        update.setValueOfField("doc_dept_name", document.deptName);
-        update.setValueOfField("doc_emp_number", document.empNumber);
-        update.setValueOfField("doc_publish_date", document.publishDate);
-        update.setValueOfField("doc_register_date", document.registerDate);
-        update.setValueOfField("doc_author_name", document.authorName);
-        update.setValueOfField("doc_description", document.description);
-        update.setValueOfField("doc_customer_name", document.customerName);
+        PartialUpdate update = new PartialUpdate("id", document.getId());
+        update.setValueOfField("doc_code", document.getCode());
+        update.setValueOfField("doc_category", document.getCategory());
+        update.setValueOfField("doc_area", document.getArea());
+        update.setValueOfField("doc_purpose", document.getPurpose());
+        update.setValueOfField("doc_result", document.getResult());
+        update.setValueOfField("doc_reason", document.getReason());
+        update.setValueOfField("doc_file_name", document.getFileName());
+        update.setValueOfField("doc_dept_name", document.getDeptName());
+        update.setValueOfField("doc_emp_number", document.getEmpNumber());
+        update.setValueOfField("doc_publish_date", document.getPublishDate());
+        update.setValueOfField("doc_register_date", document.getRegisterDate());
+        update.setValueOfField("doc_author_name", document.getAuthorName());
+        update.setValueOfField("doc_description", document.getDescription());
+        update.setValueOfField("doc_customer_name", document.getCustomerName());
 
         solrTemplate.saveBean(update);
         solrTemplate.commit();
@@ -101,7 +101,7 @@ public class DocumentService {
         Optional<Document> opt = repository.findByCode(code);
         if (opt.isPresent()) {
             String rootDirectory = environment.getRequiredProperty(DOCUMENT_ROOT);
-            return Paths.get(rootDirectory, opt.get().code, opt.get().fileName);
+            return Paths.get(rootDirectory, opt.get().getCode(), opt.get().getFileName());
         }
         throw new NullPointerException();
     }

@@ -93,7 +93,7 @@ public class DocumentController extends WebMvcConfigurerAdapter {
             return;
 
         Path path = documentService.getPathOf(code);
-        String dFilename = new String(doc.fileName.getBytes("Windows-31J"), "ISO-8859-1");
+        String dFilename = new String(doc.getFileName().getBytes("Windows-31J"), "ISO-8859-1");
         res.reset();
         res.setHeader("Content-Transfer-Encoding", "binary");
         res.setHeader("Content-Disposition", "attachment; filename=" + dFilename);

@@ -9,8 +9,8 @@ import javax.persistence.Id;
 @Entity(name="categories") @Data
 public class Category {
     @Id @Column(name="category_id")
-    public Integer id;
-    public String code;
-    public String name;
-    public Integer displayOrder;
+    private Integer id;
+    private String code;
+    private String name;
+    private Integer displayOrder;
 }

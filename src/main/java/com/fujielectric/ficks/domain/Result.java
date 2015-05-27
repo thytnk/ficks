@@ -9,7 +9,7 @@ import javax.persistence.Id;
 @Entity(name="results")  @Data
 public class Result {
     @Id @Column(name="result_id")
-    public Integer id;
-    public String name;
-    public Integer displayOrder;
+    private Integer id;
+    private String name;
+    private Integer displayOrder;
 }

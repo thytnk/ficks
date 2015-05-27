@@ -62,7 +62,7 @@ public class DocumentAddController extends WebMvcConfigurerAdapter {
         String fileName = fileName(multipartFile);
         documentService.saveDataAndFile(document, fileName, multipartFile.getBytes());
 
-        log.info("add success: {}", document.code);
+        log.info("add success: {}", document.getCode());
         return "input";
     }
 
