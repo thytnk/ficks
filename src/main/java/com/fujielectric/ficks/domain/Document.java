@@ -7,6 +7,7 @@ import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.solr.core.mapping.Indexed;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -75,7 +76,6 @@ public class Document {
 
     /** 成否要因 */
     @Indexed @Field("doc_reason")
-    @NotNull
     private Integer reason;
 
     /** 部署名 */
@@ -97,7 +97,7 @@ public class Document {
     /** 発行日 */
     @Indexed @Field("doc_publish_date")
     @Temporal(TemporalType.DATE)
-    @Past
+    @DateTimeFormat(pattern="yyyy/MM/dd")
     private Date publishDate;
 
     /** ファイル名 */

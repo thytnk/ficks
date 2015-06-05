@@ -41,3 +41,8 @@ gradle.properties
 /src/main/webapp/link.jsp
 /src/main/webapp/footer.jsp
 logs/
+
+
+### specific ###
+/src/main/resources/db/migration/V1_07__Documents_Data.sql
+/src/main/resources/db/migration/V1_08__Documents_code.sql
