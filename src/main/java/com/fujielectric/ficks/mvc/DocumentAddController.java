@@ -2,6 +2,7 @@ package com.fujielectric.ficks.mvc;
 
 import com.fujielectric.ficks.domain.Document;
 import com.fujielectric.ficks.domain.DocumentService;
+import com.fujielectric.ficks.domain.PrintDirection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -25,7 +27,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
 @Controller
-@RequestMapping("/form")
+@RequestMapping("/documents/add")
 public class DocumentAddController extends WebMvcConfigurerAdapter {
     private Logger log = LoggerFactory.getLogger(DocumentAddController.class);
 
@@ -35,22 +37,38 @@ public class DocumentAddController extends WebMvcConfigurerAdapter {
     @Autowired
     private DocumentService documentService;
 
+    @ModelAttribute
+    Document setupDocument() {
+        Document document = new Document();
+        document.setCategory("A");
+        document.setArea(99);
+        document.setPurpose(99);
+        document.setResult(9);
+        document.setPrintDirection(PrintDirection.Horizontal);
+        document.setIndexed(false);
+        return document;
+    }
+
     @ResponseStatus(OK)
     @RequestMapping(method=GET)
-    public String addForm(Document document, Model model) {
+    String addForm(Document document, Model model) {
         gui.addDropDowns(model);
         return "input";
     }
 
     @ResponseStatus(OK)
     @RequestMapping(method=POST)
-    public String add(@Valid Document document,
+    String add(@Validated Document document,
                       BindingResult result,
                       Model model,
                       @RequestParam("file") MultipartFile multipartFile
                       ) throws IOException {
         log.debug("add:");
         gui.addDropDowns(model);
+
+        if (multipartFile.isEmpty()) {
+            result.addError(new ObjectError("file", "{NotBlank.file}"));
+        }
 
         if (result.hasErrors()) {
             for (ObjectError oe : result.getAllErrors()) {
@@ -59,14 +77,14 @@ public class DocumentAddController extends WebMvcConfigurerAdapter {
             return "input";
         }
 
-        String fileName = fileName(multipartFile);
-        documentService.saveDataAndFile(document, fileName, multipartFile.getBytes());
+        String originalFilename = originalFilename(multipartFile);
+        documentService.saveDataAndFile(document, originalFilename, multipartFile.getBytes());
 
         log.info("add success: {}", document.getCode());
         return "input";
     }
 
-    private String fileName(MultipartFile multipartFile) {
+    private String originalFilename(MultipartFile multipartFile) {
         String originalFilename = multipartFile.getOriginalFilename();
         return Paths.get(originalFilename).getFileName().toString();
     }

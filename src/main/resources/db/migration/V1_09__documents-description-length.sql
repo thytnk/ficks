@@ -1,0 +1,1 @@
+ALTER TABLE documents ALTER COLUMN description TYPE VARCHAR(4000);

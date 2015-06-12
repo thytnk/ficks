@@ -38,17 +38,17 @@ public class DocumentService {
     private SolrOperations solrTemplate;
 
     @Transactional
-    public void saveDataAndFile(Document document, String fileName, byte[] fileData) {
+    public void saveDataAndFile(Document document, String originalFilename, byte[] fileData) {
         log.info("go add");
 
-        saveData(document, fileName);
+        saveData(document, originalFilename);
         saveFile(document, fileData);
 
         log.info("end add");
     }
 
-    private void saveData(Document document, String fileName) {
-        document.setFileName(fileName);
+    private void saveData(Document document, String originalFilename) {
+        document.setOriginalFileName(originalFilename);
         repository.save(document);
         repository.flush(); // 連番生成のためflushの必要あり
     }

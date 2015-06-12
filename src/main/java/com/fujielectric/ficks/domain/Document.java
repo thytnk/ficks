@@ -2,17 +2,15 @@ package com.fujielectric.ficks.domain;
 
 import lombok.Data;
 import static org.apache.commons.lang3.StringUtils.leftPad;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import org.apache.solr.client.solrj.beans.Field;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -35,7 +33,8 @@ public class Document {
     @Column(name="small_code", insertable=false, updatable=false)
     private Integer smallCode;
 
-    /** リビジョン: 登録時に生成、更新時にインクリメント */
+    /** リビジョン: 登録時に生成、改版時にインクリメント */
+//    @NotNull @Min(1) @Max(99)
     private Integer revision;
 
     /** 管理番号 */
@@ -56,7 +55,7 @@ public class Document {
 
     /** 資料別 */
     @Indexed @Field("doc_category")
-    @NotBlank @Pattern(regexp = "[A-Z]")
+    @NotNull @Pattern(regexp = "([A-Z])?")
     private String category;
 
     /** 種類 */
@@ -80,29 +79,38 @@ public class Document {
 
     /** 部署名 */
     @Indexed @Field("doc_dept_name")
+    @Size(max=50)
     private String deptName;
 
     /** 従業員番号 */
     @Indexed @Field("doc_emp_number")
+    @Pattern(regexp = "(\\d{6})?", message="半角数字6文字です。")
     private String empNumber;
 
     /** 担当者名 */
     @Indexed @Field("doc_author_name")
+    @Size(max=50)
     private String authorName;
 
     /** コメント */
     @Indexed @Field("doc_description")
+    @Size(max=1300)
     private String description;
 
     /** 発行日 */
     @Indexed @Field("doc_publish_date")
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern="yyyy/MM/dd")
+    @NotNull @DateTimeFormat(pattern="yyyy/MM/dd")
     private Date publishDate;
 
     /** ファイル名 */
     @Indexed @Field("doc_file_name")
+    @Size(max=50)
+    @Pattern(regexp = "(.+\\.[a-zA-Z0-9]{3,5})?")
     private String fileName;
+
+    /** ファイル名 */
+    private String originalFileName;
 
     /** 登録日 */
     @Indexed @Field("doc_register_date")
@@ -111,6 +119,7 @@ public class Document {
 
     /** 顧客名 */
     @Indexed @Field("doc_customer_name")
+    @Size(max=50,message="{0}文字以内で入力してください。")
     private String customerName;
 
     /** 論理削除 */
@@ -126,37 +135,28 @@ public class Document {
     @Temporal(TemporalType.DATE)
     private Date printDate;
 
+    /** Solrインデックス状態(最新ならtrue) */
+    private boolean indexed;
+
     /** Solrインデックス日時 */
     @Temporal(TemporalType.DATE)
     private Date indexDate;
-/*
-    @Transient
-    @Indexed @Field("resourcename")
-    public String resourceName;
-
-    @Transient
-    @Indexed @Field("content_type")
-    public List<String> contentType;
-
-    @Transient
-    @Indexed @Field("last_modified")
-    public String lastModified;
-*/
-    //@Transient
-    //public String getFileName() {
-    //    if (resourceName != null) {
-    //        return Paths.get(resourceName).getFileName().toString();
-    //    } /*else if (id != null) {
-    //        return Paths.get(id).getFileName().toString();
-    //    }*/
-    //    return "";
-    //}
 
     @SuppressWarnings("UnusedDeclaration")
     @PrePersist void onPrePersist() {
-        largeCode = LocalDate.now().getYear() % 100;
-        revision = 1;
-        registerDate = new Date();
+        if (isBlank(fileName)) {
+            setFileName(getOriginalFileName());
+        }
+
+        if (largeCode == null) {
+            setLargeCode(LocalDate.now().getYear() % 100);
+        }
+
+        if (revision == null) {
+            setRevision(1);
+        }
+        setRegisterDate(new Date());
+        setIndexed(false);
     }
 
     @SuppressWarnings("UnusedDeclaration")

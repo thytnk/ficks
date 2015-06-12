@@ -11,11 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-@RequestMapping("/api/documents")
+@RequestMapping("/api/documents/index")
 public class DocumentRestController {
     private Logger log = LoggerFactory.getLogger(DocumentRestController.class);
 
@@ -26,7 +25,7 @@ public class DocumentRestController {
     private DocumentService documentService;
 
     @ResponseStatus(OK)
-    @RequestMapping(value="{code}/index", method=GET)
+    @RequestMapping(value="{code}", method=POST)
     public void updateIndex(@PathVariable("code") String code) {
         Optional<Document> opt = jpaRepository.findByCode(code);
         opt.ifPresent(document -> {

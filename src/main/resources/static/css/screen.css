@@ -84,6 +84,11 @@ pre {
   font-weight:bold;
 }
 
+.error-text,label>b {
+  color: red;
+}
+
+
 
 /*----------------------------------------------------------------------*/
 .btn-category-A {

@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css"/>
   <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
   <link rel="stylesheet" href="/css/lib/pnotify.custom.min.css"/>
-  <link rel="stylesheet" href="/css/screen.css?a"/>
+  <link rel="stylesheet" href="/css/screen.css?20150611b"/>
   <link rel="shortcut icon" href="favicon.ico"/>
 
   <!--[if lt IE 9]>
@@ -44,44 +44,44 @@
 
     <form id="add" th:action="@{/form}" th:object="${document}"
           method="post" enctype="multipart/form-data" class="form-horizontal">
-
+        <div th:if="${#fields.hasErrors('all')}" class="alert alert-danger">
+          <p th:text="#{common.error}">ErrorMessage</p>
+        </div>
 
         <div class="form-group">
-          <label class="col col-xs-12 col-sm-3 col-md-3 control-label">種類別</label>
-          <div class="col col-sm-9 btn-group">
+          <label class="col col-xs-12 col-sm-3 col-md-3 control-label">種類別<b>*</b></label>
+          <div class="col col-sm-9 col-md-9 btn-group">
             <label class="col-sm-2 btn btn-category-A"><input type="radio" th:field="*{category}" th:value="A"/> 提案資料</label>
             <label class="col-sm-2 btn btn-category-B"><input type="radio" th:field="*{category}" th:value="B"/> 技術資料</label>
             <label class="col-sm-2 btn btn-category-C"><input type="radio" th:field="*{category}" th:value="C"/> 設定資料</label>
             <label class="col-sm-2 btn btn-category-D"><input type="radio" th:field="*{category}" th:value="D"/> 手順資料</label>
             <label class="col-sm-2 btn btn-category-E"><input type="radio" th:field="*{category}" th:value="E"/> 業務関連</label>
           </div>
-          <div class="col col-xs-10 col-sm-3 col-md-3">
-            <p class="help-block" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></p>
-          </div>
+          <p class="help-block error-text" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></p>
         </div>
 
         <div class="form-group">
-          <label for="search_area" class="col col-xs-12 col-sm-3 col-md-3 control-label">分野</label>
+          <label for="search_area" class="col col-xs-12 col-sm-3 col-md-3 control-label">分野<b>*</b></label>
           <div class="col col-xs-10 col-sm-3 col-md-3">
             <select id="search_area" th:field="*{area}" class="form-control input-sm">
               <option th:each="a : ${areaList}" th:value="${a.id}" th:text="${a.name}"/>
             </select>
           </div>
-          <div class="col col-xs-10 col-sm-3 col-md-3">
-            <p class="help-block" th:if="${#fields.hasErrors('area')}" th:errors="*{area}"></p>
-          </div>
           <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+          <div class="col col-xs-10 col-sm-3 col-md-3">
+            <p class="help-block error-text" th:if="${#fields.hasErrors('area')}" th:errors="*{area}"></p>
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="search_purpose" class="col col-xs-12 col-sm-3 col-md-3 control-label">ドキュメント種類</label>
+          <label for="search_purpose" class="col col-xs-12 col-sm-3 col-md-3 control-label">ドキュメント種類<b>*</b></label>
           <div class="col col-xs-10 col-sm-3 col-md-3">
             <select id="search_purpose" th:field="*{purpose}" class="form-control input-sm">
               <option th:each="p : ${purposeList}" th:value="${p.id}" th:text="${p.name}"/>
             </select>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">
-            <p class="help-block" th:if="${#fields.hasErrors('purpose')}" th:errors="*{purpose}"></p>
+            <p class="help-block error-text" th:if="${#fields.hasErrors('purpose')}" th:errors="*{purpose}"></p>
           </div>
           <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
         </div>
@@ -92,7 +92,7 @@
             <input type="text" id="search_customer" th:field="*{customerName}" class="form-control input-sm"/>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">
-            <p class="help-block" th:if="${#fields.hasErrors('customerName')}" th:errors="*{customerName}"></p>
+            <p class="help-block error-text" th:if="${#fields.hasErrors('customerName')}" th:errors="*{customerName}"></p>
           </div>
           <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
         </div>
@@ -103,21 +103,20 @@
             <input type="text" id="search_author" th:field="*{authorName}" class="form-control input-sm"/>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">
-            <p class="help-block" th:if="${#fields.hasErrors('authorName')}" th:errors="*{authorName}"></p>
+            <p class="help-block error-text" th:if="${#fields.hasErrors('authorName')}" th:errors="*{authorName}"></p>
           </div>
           <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
         </div>
 
         <div class="form-group">
-          <label for="search_result" class="col col-xs-12 col-sm-3 col-md-3 control-label">成否</label>
+          <label for="search_result" class="col col-xs-12 col-sm-3 col-md-3 control-label">成否<b>*</b></label>
           <div class="col col-xs-10 col-sm-3 col-md-3">
             <select id="search_result" th:field="*{result}" class="form-control input-sm">
-              <option value="">&nbsp;</option>
               <option th:each="r : ${resultList}" th:value="${r.id}" th:text="${r.name}"/>
             </select>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">
-            <p class="help-block" th:if="${#fields.hasErrors('result')}" th:errors="*{result}"></p>
+            <p class="help-block error-text" th:if="${#fields.hasErrors('result')}" th:errors="*{result}"></p>
           </div>
           <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
         </div>
@@ -131,7 +130,7 @@
             </select>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">
-            <p class="help-block" th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}"></p>
+            <p class="help-block error-text" th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}"></p>
           </div>
           <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
         </div>
@@ -142,7 +141,7 @@
             <input type="text" id="deptName" th:field="*{deptName}" class="form-control"/>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">
-            <p class="help-block" th:if="${#fields.hasErrors('deptName')}" th:errors="*{deptName}"></p>
+            <p class="help-block error-text" th:if="${#fields.hasErrors('deptName')}" th:errors="*{deptName}"></p>
           </div>
           <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
         </div>
@@ -153,7 +152,7 @@
             <input type="text" id="empNumber" th:field="*{empNumber}" class="form-control"/>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">
-            <p class="help-block" th:if="${#fields.hasErrors('empNumber')}" th:errors="*{empNumber}"></p>
+            <p class="help-block error-text" th:if="${#fields.hasErrors('empNumber')}" th:errors="*{empNumber}"></p>
           </div>
           <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
         </div>
@@ -164,7 +163,7 @@
             <textarea id="description" th:field="*{description}" class="form-control"></textarea>
           </div>
           <div class="col col-xs-10 col-sm-9 col-md-9">
-            <p class="help-block" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+            <p class="help-block error-text" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
           </div>
           <div class="col-xs-offset-2 col-sm-offset-3 col-md-offset-3"></div>
         </div>
@@ -175,34 +174,56 @@
             <input type="date" id="publishDate"  th:field="*{publishDate}" class="form-control"/>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">
-            <p class="help-block" th:if="${#fields.hasErrors('publishDate')}" th:errors="*{publishDate}"></p>
+            <p class="help-block error-text" th:if="${#fields.hasErrors('publishDate')}" th:errors="*{publishDate}"></p>
           </div>
           <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
         </div>
 
         <div class="form-group">
-          <label class="col-xs-12 col col-sm-3 col-md-3 control-label">サムネイル縦横</label>
-          <div class="col col-xs-5 col-sm-2 col-md-2">
-            <label><input type="radio" th:field="*{printDirection}" th:value="Vertical"/> 横向き</label>
+          <label class="col-xs-12 col col-sm-3 col-md-3 control-label">サムネイル縦横<b>*</b></label>
+          <div class="col col-xs-5 col-sm-1 col-md-1">
+            <label><input type="radio" th:field="*{printDirection}" th:value="Vertical"/> ヨコ</label>
           </div>
           <div class="col col-xs-5 col-sm-2 col-md-2">
-            <label><input type="radio" th:field="*{printDirection}" th:value="Horizontal"/> 縦向き</label>
+            <label><input type="radio" th:field="*{printDirection}" th:value="Horizontal"/> タテ</label>
           </div>
-          <p class="help-block" th:if="${#fields.hasErrors('printDirection')}" th:errors="*{printDirection}"></p>
-          <div class="col-xs-offset-2 col-sm-offset-5 col-md-offset-5"></div>
+          <p class="help-block error-text" th:if="${#fields.hasErrors('printDirection')}" th:errors="*{printDirection}"></p>
+          <div class="col-xs-offset-2 col-sm-offset-6 col-md-offset-6"></div>
         </div>
 
         <div class="form-group">
-          <label for="file" class="col col-xs-12 col-sm-3 col-md-3 control-label">ファイル</label>
+          <label for="file" class="col col-xs-12 col-sm-3 col-md-3 control-label">ファイル<b>*</b></label>
           <div class="col col-xs-10 col-sm-8 col-md-8">
             <input type="file" id="file" name="file"/>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">
-
+            <p class="help-block error-text" th:if="${#fields.hasErrors('all')}" th:text="#{NotBlank.file}"></p>
           </div>
           <div class="col-xs-offset-2 col-sm-offset-1 col-md-offset-1"></div>
         </div>
 
+      <div class="form-group">
+        <label for="file_name" class="col col-xs-12 col-sm-3 col-md-3 control-label">登録ファイル名</label>
+        <div class="col col-xs-10 col-sm-6 col-md-6">
+          <input type="text" id="file_name" th:field="*{fileName}" class="form-control input-sm"/>
+        </div>
+        <div class="col col-xs-10 col-sm-3 col-md-3">
+          <p class="help-block error-text" th:if="${#fields.hasErrors('fileName')}" th:errors="*{fileName}"></p>
+        </div>
+        <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+      </div>
+<!--
+      <div class="form-group">
+        <label for="revision" class="col col-xs-12 col-sm-3 col-md-3 control-label">リビジョン</label>
+        <div class="col col-xs-10 col-sm-1 col-md-1">
+          <input type="text" id="revision" th:field="*{revision}" class="form-control"/>
+        </div>
+        <div class="col col-xs-10 col-sm-3 col-md-3">
+          <p class="help-block error-text" th:if="${#fields.hasErrors('revision')}" th:errors="*{revision}"></p>
+        </div>
+        <div class="col-xs-offset-2 col-sm-offset-11 col-md-offset-11"></div>
+      </div>
+-->
         <div class="form-group">
           <div class="col col-xs-9 col-xs-offset-3 col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3">
             <button type="submit" class="btn btn-primary btn-lg">登録</button>

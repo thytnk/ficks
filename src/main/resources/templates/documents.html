@@ -190,13 +190,13 @@
                     <span title="分野" th:if="${doc.area != null}" th:text="*{areas[doc.area]}"></span> /
                     <span title="ドキュメント種類" th:if="${doc.purpose != null}" th:text="*{purposes[doc.purpose]}"></span> /
                     <span title="成否" th:if="${doc.result != null}" th:text="*{results[doc.result]}"></span>
-                    <span title="成否要因" th:if="${doc.reason != null}" th:text=" (${reasons[doc.reason]})"></span>
+                    <span title="成否要因" th:if="${doc.reason != null}" th:text="'（' + ${reasons[doc.reason]} + '）'"></span>
                   </p>
                 </div>
                 <div class="row" th:if="${doc.customerName != null}">
                   <p class="col-sm-12" title="顧客名"><label th:text="*{doc.customerName}">顧客名:</label></p>
                 </div>
-                <div class="row" title="コメント" th:if="${doc.description != null}"><pre class="col-sm-12 small" th:text="*{doc.description}"></pre>
+                <div class="row" title="コメント" th:if="${doc.description != null and doc.description != ''}"><pre class="col-sm-12 small" th:text="*{doc.description}"></pre>
                 </div>
               </div>
               <div class="col-sm-3">
