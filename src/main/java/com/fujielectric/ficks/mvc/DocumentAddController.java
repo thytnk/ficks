@@ -27,7 +27,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
 @Controller
-@RequestMapping("/documents/add")
+@RequestMapping("/admin/documents/add")
 public class DocumentAddController extends WebMvcConfigurerAdapter {
     private Logger log = LoggerFactory.getLogger(DocumentAddController.class);
 

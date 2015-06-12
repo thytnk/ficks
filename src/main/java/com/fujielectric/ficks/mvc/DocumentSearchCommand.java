@@ -119,12 +119,15 @@ public class DocumentSearchCommand {
             log.debug("keyword: {}", keyword.split("\\s"));
             List<String> keywords = Arrays.asList(keyword.split("\\s"));
             for (String keyword: keywords) {
+                criteria = criteria.and(new Criteria("text").expression(keyword));
+
+                /*
                 criteria = criteria.and(new Criteria("content").contains(keyword)
                         .or("resourcename").contains(keyword)
                         .or("doc_description").contains(keyword)
                         .or("doc_customer_name").contains(keyword)
                         .or("doc_author_name").contains(keyword)
-                        .or("doc_code").contains(keyword));
+                        .or("doc_code").contains(keyword));*/
             }
         }
 
