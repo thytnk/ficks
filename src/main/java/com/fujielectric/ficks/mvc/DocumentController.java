@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -46,9 +45,9 @@ public class DocumentController extends WebMvcConfigurerAdapter {
     public String home(DocumentSearchCommand documentSearchCommand, Model model) {
         Query query = new SimpleQuery(new Criteria("id").isNotNull());
         query.addSort(sortByRegisterDate());
-        Page resultPage = solrTemplate.queryForPage(query, Document.class);
+        Page<Document> resultPage = solrTemplate.queryForPage(query, Document.class);
 
-        List<Document> docs = resultPage.getContent();
+//        List<Document> docs = resultPage.getContent();
 
         gui.addDropDowns(model);
         model.addAttribute("list", resultPage);
@@ -65,7 +64,7 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         query.setRows(100);
         FacetPage<Document> resultPage = solrTemplate.queryForFacetPage(query, Document.class);
 
-        List<Document> docs = resultPage.getContent();
+//        List<Document> docs = resultPage.getContent();
         Page<FacetFieldEntry> areaFacet = resultPage.getFacetResultPage("doc_area");
         model.addAttribute("areaFacet", areaFacet);
         Page<FacetFieldEntry> purposeFacet = resultPage.getFacetResultPage("doc_purpose");

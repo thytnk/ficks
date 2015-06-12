@@ -8,14 +8,13 @@ import org.springframework.data.solr.core.query.Criteria;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 
 /**
- * Created by u000749 on 2015/04/02.
+ * 文書検索フォーム
  */
 @Data
 public class DocumentSearchCommand {
@@ -95,9 +94,8 @@ public class DocumentSearchCommand {
         if (publishedFrom != null && !"".equals(publishedFrom)) {
             log.debug("publishedFrom: {}", publishedFrom);
 
-            Date publishedDateFrom = null;
             try {
-                publishedDateFrom = dateParser.parse(publishedFrom);
+                Date publishedDateFrom = dateParser.parse(publishedFrom);
                 criteria = criteria.and(new Criteria("doc_publish_date").greaterThanEqual(publishedDateFrom));
             } catch (ParseException e) {
                 log.debug("publishedFrom parse failed");
@@ -106,9 +104,9 @@ public class DocumentSearchCommand {
 
         if (publishedTo != null && !"".equals(publishedTo)) {
             log.debug("publishedTo: {}", publishedTo);
-            Date publishedDateTo = null;
+
             try {
-                publishedDateTo = dateParser.parse(publishedTo);
+                Date publishedDateTo = dateParser.parse(publishedTo);
                 criteria = criteria.and(new Criteria("doc_publish_date").lessThanEqual(publishedDateTo));
             } catch (ParseException e) {
                 log.debug("publishedTo parse failed");

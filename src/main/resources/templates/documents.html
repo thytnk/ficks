@@ -59,14 +59,14 @@
         <label class="control-label" for="search_area">分野</label>
         <select id="search_area" th:field="*{area}" class="form-control input-sm">
           <option value="*">&nbsp;</option>
-          <option th:each="a : ${areaList}" th:value="${a.id}" th:text="${a.name}"/>
+          <option th:each="a : ${areaList}" th:value="${a.id}" th:text="${a.name}"></option>
         </select>
       </p>
       <p class="col-sm-2 form-group">
         <label class="control-label" for="search_purpose">ドキュメント種類</label>
         <select id="search_purpose" th:field="*{purpose}" class="form-control input-sm">
           <option value="*">&nbsp;</option>
-          <option th:each="p : ${purposeList}" th:value="${p.id}" th:text="${p.name}"/>
+          <option th:each="p : ${purposeList}" th:value="${p.id}" th:text="${p.name}"></option>
         </select>
       </p>
       <p class="col-sm-3 form-group">
@@ -81,14 +81,14 @@
         <label class="control-label" for="search_result">成否</label>
         <select id="search_result" th:field="*{result}" class="form-control input-sm">
           <option value="*">&nbsp;</option>
-          <option th:each="r : ${resultList}" th:value="${r.id}" th:text="${r.name}"/>
+          <option th:each="r : ${resultList}" th:value="${r.id}" th:text="${r.name}"></option>
         </select>
       </p>
       <p class="col-sm-2 form-group">
         <label class="control-label" for="search_reason">成否要因</label>
         <select id="search_reason" th:field="*{reason}" class="form-control input-sm">
           <option value="*"></option>
-          <option th:each="r : ${reasonList}" th:value="${r.id}" th:text="${r.name}"/>
+          <option th:each="r : ${reasonList}" th:value="${r.id}" th:text="${r.name}"></option>
         </select>
       </p>
     </div>

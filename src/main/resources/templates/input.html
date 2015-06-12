@@ -63,7 +63,7 @@
           <label for="search_area" class="col col-xs-12 col-sm-3 col-md-3 control-label">分野<b>*</b></label>
           <div class="col col-xs-10 col-sm-3 col-md-3">
             <select id="search_area" th:field="*{area}" class="form-control input-sm">
-              <option th:each="a : ${areaList}" th:value="${a.id}" th:text="${a.name}"/>
+              <option th:each="a : ${areaList}" th:value="${a.id}" th:text="${a.name}"></option>
             </select>
           </div>
           <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
@@ -76,7 +76,7 @@
           <label for="search_purpose" class="col col-xs-12 col-sm-3 col-md-3 control-label">ドキュメント種類<b>*</b></label>
           <div class="col col-xs-10 col-sm-3 col-md-3">
             <select id="search_purpose" th:field="*{purpose}" class="form-control input-sm">
-              <option th:each="p : ${purposeList}" th:value="${p.id}" th:text="${p.name}"/>
+              <option th:each="p : ${purposeList}" th:value="${p.id}" th:text="${p.name}"></option>
             </select>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">
@@ -111,7 +111,7 @@
           <label for="search_result" class="col col-xs-12 col-sm-3 col-md-3 control-label">成否<b>*</b></label>
           <div class="col col-xs-10 col-sm-3 col-md-3">
             <select id="search_result" th:field="*{result}" class="form-control input-sm">
-              <option th:each="r : ${resultList}" th:value="${r.id}" th:text="${r.name}"/>
+              <option th:each="r : ${resultList}" th:value="${r.id}" th:text="${r.name}"></option>
             </select>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">
@@ -125,7 +125,7 @@
           <div class="col col-xs-10 col-sm-3 col-md-3">
             <select id="search_reason" th:field="*{reason}" class="form-control input-sm">
               <option value=""></option>
-              <option th:each="r : ${reasonList}" th:value="${r.id}" th:text="${r.name}"/>
+              <option th:each="r : ${reasonList}" th:value="${r.id}" th:text="${r.name}"></option>
             </select>
           </div>
           <div class="col col-xs-10 col-sm-3 col-md-3">

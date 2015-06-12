@@ -11,7 +11,6 @@ import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
 import java.net.URL;
-import java.util.Optional;
 
 @Configuration
 public class LogConfig {
