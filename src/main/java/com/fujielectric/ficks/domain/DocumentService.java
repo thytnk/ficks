@@ -1,19 +1,27 @@
 package com.fujielectric.ficks.domain;
 
+import static org.springframework.data.domain.Sort.Direction.*;
+
 import com.fujielectric.ficks.jpa.DocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.solr.core.SolrOperations;
 import org.springframework.data.solr.core.query.PartialUpdate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.io.*;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,27 +40,30 @@ public class DocumentService {
     @Autowired
     private SolrOperations solrTemplate;
 
-    @Transactional
-    public void saveDataAndFile(Document document, String originalFilename, byte[] fileData) {
-        log.info("go add");
-
-        saveData(document, originalFilename);
-        saveFile(document, fileData);
-
-        log.info("end add");
+    public List<Document> listSortedByDate() {
+        return repository.findAll(new Sort(
+                new Order(DESC, "updateDate"),
+                new Order(DESC, "code")
+        ));
     }
 
-    private void saveData(Document document, String originalFilename) {
-        document.setOriginalFileName(originalFilename);
-        repository.save(document);
-        repository.flush(); // 連番生成のためflushの必要あり
+    @Transactional
+    public void saveDataAndFile(Document document, byte[] fileData) {
+        saveData(document);
+        saveFile(document, fileData);
+    }
+
+    @Transactional
+    public void saveData(Document document) {
+        log.info("save data");
+        repository.saveAndFlush(document); // 連番生成のためflushの必要あり
     }
 
     private void saveFile(Document document, byte[] fileData) {
-        File file = prepareFile(document);
+        log.info("save file");
+        Path path = prepareDirectory(document);
 
-        try (BufferedOutputStream stream =
-                     new BufferedOutputStream(new FileOutputStream(file))){
+        try (OutputStream stream = Files.newOutputStream(path)) {
             stream.write(fileData);
         } catch (IOException e) {
             log.error("exception on saving file:", e);
@@ -60,14 +71,31 @@ public class DocumentService {
     }
 
     /** ファイルの保存先ディレクトリ */
-    public File prepareFile(Document document) {
+    public Path prepareDirectory(Document document) {
         if (document.documentCode() == null || document.getFileName() == null)
             throw new IllegalStateException();
 
         String rootDirectory = environment.getRequiredProperty(DOCUMENT_ROOT);
-        File parent = Paths.get(rootDirectory, document.getCode()).toFile();
-        parent.mkdir();
-        return Paths.get(rootDirectory, document.getCode(), document.getFileName()).toFile();
+        Path path = Paths.get(rootDirectory, document.getCode());
+
+        try {
+            if (Files.exists(path)) {
+                // for update
+                Files.list(path).forEach(child -> {
+                    try {
+                        Files.delete(child);
+                    } catch (IOException e) {
+                        log.error("File delete failed: {}", child);
+                    }
+                });
+            } else {
+                // for create
+                Files.createDirectory(path);
+            }
+        } catch (IOException e) {
+            log.error("Prepare Directory failed.");
+        }
+        return Paths.get(rootDirectory, document.getCode(), document.getFileName());
     }
 
     /** 文書のインデックスを更新 */
@@ -87,6 +115,7 @@ public class DocumentService {
         update.setValueOfField("doc_author_name", document.getAuthorName());
         update.setValueOfField("doc_description", document.getDescription());
         update.setValueOfField("doc_customer_name", document.getCustomerName());
+        update.setValueOfField("doc_disabled", document.isDisabled());
 
         solrTemplate.saveBean(update);
         solrTemplate.commit();

@@ -115,7 +115,12 @@ public class Document {
     /** 登録日 */
     @Indexed @Field("doc_register_date")
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern="yyyy/MM/dd")
     private Date registerDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern="yyyy/MM/dd")
+    private Date updateDate;
 
     /** 顧客名 */
     @Indexed @Field("doc_customer_name")
@@ -133,6 +138,7 @@ public class Document {
 
     /** サムネイル印刷日時 */
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern="yyyy/MM/dd")
     private Date printDate;
 
     /** Solrインデックス状態(最新ならtrue) */
@@ -140,9 +146,9 @@ public class Document {
 
     /** Solrインデックス日時 */
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern="yyyy/MM/dd")
     private Date indexDate;
 
-    @SuppressWarnings("UnusedDeclaration")
     @PrePersist void onPrePersist() {
         if (isBlank(fileName)) {
             setFileName(getOriginalFileName());
@@ -156,12 +162,21 @@ public class Document {
             setRevision(1);
         }
         setRegisterDate(new Date());
+        setUpdateDate(new Date());
         setIndexed(false);
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     @PostPersist void onPostPersist() {
         code = documentCode();
+    }
+
+    @PreUpdate void onPreUpdate() {
+        if (isBlank(fileName)) {
+            setFileName(getOriginalFileName());
+        }
+
+        setUpdateDate(new Date());
+        setIndexed(false);
     }
 
     @Override

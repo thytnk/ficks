@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta http-equiv="pragma" content="no-cache"/>
+  <meta http-equiv="cache-control" content="no-cache"/>
+
+  <title>FICKS(プロトタイプ): FSL Intranet Community Knowledge management System</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css"       th:href="@{/css/bootstrap.min.css}"/>
+  <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{/css/bootstrap-theme.min.css}"/>
+  <link rel="stylesheet" href="/css/screen.css?b"            th:href="@{/css/screen.css?b}"/>
+  <link rel="shortcut icon" href="favicon.ico"               th:href="@{/favicon.ico}"/>
+
+  <!--[if lt IE 9]>
+  <script src="/js/lib/html5shiv.min.js"></script>
+  <script src="/js/lib/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/documents" class="navbar-brand"><img src="/img/logo-mid.png" alt="FICKS:"/></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <h1 class="navbar-text"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem (プロトタイプ)</h1>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/documents" class="glyphicon glyphicon-home" aria-hidden="true"> HOME</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <form id="add" th:object="${document}"
+        method="post" enctype="multipart/form-data" class="form-horizontal">
+    <div th:if="${#fields.hasErrors('all')}" class="alert alert-warning">
+      <p th:text="#{common.error}">ErrorMessage</p>
+    </div>
+
+    <input type="hidden" th:field="*{id}"/>
+    <input type="hidden" th:field="*{largeCode}"/>
+    <input type="hidden" th:field="*{smallCode}"/>
+    <input type="hidden" th:field="*{code}"/>
+    <input type="hidden" th:field="*{revision}"/>
+    <input type="hidden" th:field="*{category}"/>
+    <input type="hidden" th:field="*{registerDate}"/>
+    <input type="hidden" th:field="*{originalFileName}"/>
+
+    <div class="form-group">
+      <label for="search_area" class="col col-xs-12 col-sm-3 col-md-3 control-label">コード<b>*</b></label>
+      <div class="col col-xs-10 col-sm-2 col-md-2 control-label" th:text="*{code}"></div>
+      <div class="col-xs-offset-2 col-sm-offset-7 col-md-offset-7"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="search_area" class="col col-xs-12 col-sm-3 col-md-3 control-label">分野<b>*</b></label>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <select id="search_area" th:field="*{area}" class="form-control input-sm">
+          <option th:each="a : ${areaList}" th:value="${a.id}" th:text="${a.name}"></option>
+        </select>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('area')}" th:errors="*{area}"></p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="search_purpose" class="col col-xs-12 col-sm-3 col-md-3 control-label">ドキュメント種類<b>*</b></label>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <select id="search_purpose" th:field="*{purpose}" class="form-control input-sm">
+          <option th:each="p : ${purposeList}" th:value="${p.id}" th:text="${p.name}"></option>
+        </select>
+      </div>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('purpose')}" th:errors="*{purpose}"></p>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="search_customer" class="col col-xs-12 col-sm-3 col-md-3 control-label">顧客名</label>
+      <div class="col col-xs-10 col-sm-6 col-md-6">
+        <input type="text" id="search_customer" th:field="*{customerName}" class="form-control input-sm"/>
+      </div>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('customerName')}" th:errors="*{customerName}"></p>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="search_author" class="col col-xs-12 col-sm-3 col-md-3 control-label">担当者</label>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <input type="text" id="search_author" th:field="*{authorName}" class="form-control input-sm"/>
+      </div>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('authorName')}" th:errors="*{authorName}"></p>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="search_result" class="col col-xs-12 col-sm-3 col-md-3 control-label">成否<b>*</b></label>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <select id="search_result" th:field="*{result}" class="form-control input-sm">
+          <option th:each="r : ${resultList}" th:value="${r.id}" th:text="${r.name}"></option>
+        </select>
+      </div>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('result')}" th:errors="*{result}"></p>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="search_reason" class="col col-xs-12 col-sm-3 col-md-3 control-label">成否要因</label>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <select id="search_reason" th:field="*{reason}" class="form-control input-sm">
+          <option value=""></option>
+          <option th:each="r : ${reasonList}" th:value="${r.id}" th:text="${r.name}"></option>
+        </select>
+      </div>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}"></p>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="deptName" class="col col-xs-12 col-sm-3 col-md-3 control-label">部門名</label>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <input type="text" id="deptName" th:field="*{deptName}" class="form-control"/>
+      </div>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('deptName')}" th:errors="*{deptName}"></p>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="empNumber" class="col col-xs-12 col-sm-3 col-md-3 control-label">従業員番号</label>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <input type="text" id="empNumber" th:field="*{empNumber}" class="form-control"/>
+      </div>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('empNumber')}" th:errors="*{empNumber}"></p>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="description" class="col col-xs-12 col-sm-3 col-md-3 control-label">コメント</label>
+      <div class="col col-xs-10 col-sm-9 col-md-9">
+        <textarea id="description" th:field="*{description}" class="form-control"></textarea>
+      </div>
+      <div class="col col-xs-10 col-sm-9 col-md-9">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-3 col-md-offset-3"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="publishDate" class="col col-xs-12 col-sm-3 col-md-3 control-label">発行日</label>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <input type="date" id="publishDate"  th:field="*{publishDate}" class="form-control"/>
+      </div>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('publishDate')}" th:errors="*{publishDate}"></p>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-xs-12 col col-sm-3 col-md-3 control-label">サムネイル縦横<b>*</b></label>
+      <div class="col col-xs-5 col-sm-1 col-md-1">
+        <label><input type="radio" th:field="*{printDirection}" th:value="Vertical"/> ヨコ</label>
+      </div>
+      <div class="col col-xs-5 col-sm-2 col-md-2">
+        <label><input type="radio" th:field="*{printDirection}" th:value="Horizontal"/> タテ</label>
+      </div>
+      <p class="help-block error-text" th:if="${#fields.hasErrors('printDirection')}" th:errors="*{printDirection}"></p>
+      <div class="col-xs-offset-2 col-sm-offset-6 col-md-offset-6"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="file" class="col col-xs-12 col-sm-3 col-md-3 control-label">ファイル<b>*</b></label>
+      <div class="col col-xs-10 col-sm-8 col-md-8">
+        <input type="file" id="file" name="file"/>
+      </div>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('all')}" th:text="#{NotBlank.file}"></p>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-1 col-md-offset-1"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="file_name" class="col col-xs-12 col-sm-3 col-md-3 control-label">登録ファイル名</label>
+      <div class="col col-xs-10 col-sm-6 col-md-6">
+        <input type="text" id="file_name" th:field="*{fileName}" class="form-control input-sm"/>
+      </div>
+      <div class="col col-xs-10 col-sm-3 col-md-3">
+        <p class="help-block error-text" th:if="${#fields.hasErrors('fileName')}" th:errors="*{fileName}"></p>
+      </div>
+      <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-3"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="disabled" class="col col-xs-12 col-sm-3 col-md-3 control-label">論理削除</label>
+      <div   class="col col-xs-2 col-sm-1 col-md-1">
+        <input id="disabled" type="checkbox" th:field="*{disabled}" class="form-control input-sm"/>
+      </div>
+      <div   class="col-xs-offset-10 col-sm-offset-8 col-md-offset-8"></div>
+    </div>
+
+<!--
+      <div class="form-group">
+        <label for="revision" class="col col-xs-12 col-sm-3 col-md-3 control-label">リビジョン</label>
+        <div class="col col-xs-10 col-sm-1 col-md-1">
+          <input type="text" id="revision" th:field="*{revision}" class="form-control"/>
+        </div>
+        <div class="col col-xs-10 col-sm-3 col-md-3">
+          <p class="help-block error-text" th:if="${#fields.hasErrors('revision')}" th:errors="*{revision}"></p>
+        </div>
+        <div class="col-xs-offset-2 col-sm-offset-11 col-md-offset-11"></div>
+      </div>
+-->
+    <div class="form-group">
+      <div class="col col-xs-9 col-xs-offset-3 col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3">
+        <button type="submit" class="btn btn-primary btn-lg">登録</button>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<script src="/js/lib/modernizr.js"></script>
+<script src="/js/lib/jquery-1.11.2.min.js"></script>
+<script src="/js/lib/bootstrap.min.js"></script>
+<script src="/js/lib/bootstrap-datepicker.min.js"></script>
+<script src="/js/lib/bootstrap-datepicker.ja.min.js"></script>
+<script src="/js/lib/pnotify.custom.min.js"></script>
+<script>
+$(function() {
+  $('#publishDate').datepicker({
+    format: 'yyyy/mm/dd',
+    language: 'ja'
+  });
+});
+</script>
+</body>
+</html>

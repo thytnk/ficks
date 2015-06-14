@@ -30,7 +30,7 @@ public class GuiUtils {
 
     private Sort sortByDisplayOrder = new Sort(Sort.Direction.ASC, "displayOrder");
 
-    void addDropDowns(Model model) {
+    public void addDropDowns(Model model) {
         addCategories(model);
         addAreas(model);
         addPurposes(model);

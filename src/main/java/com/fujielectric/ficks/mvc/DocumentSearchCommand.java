@@ -45,7 +45,7 @@ public class DocumentSearchCommand {
 
     Criteria searchCriteria() {
         log.debug("### searchCriteria");
-        Criteria criteria = new Criteria("id").isNotNull();
+        Criteria criteria = new Criteria("doc_disabled").is(false);
 //        Criteria criteria = new Criteria("doc_category").in(1, 2, 3, 4);
 //        Criteria criteria = new Criteria("doc_area").is(Integer.parseInt(area));
 
