@@ -40,7 +40,8 @@
   </div>
 </nav>
 <div class="container">
-
+  <div th:if="#{$appStatus == 'success'}" class="alert alert-success" th:text="${appStatus}">hogehoge
+  </div>
   <table class="table">
     <thead>
       <tr>

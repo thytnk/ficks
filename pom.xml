@@ -6,7 +6,7 @@
 
     <groupId>com.fujielectric.ficks</groupId>
     <artifactId>ficks</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.6</version>
 
     <packaging>war</packaging>
     <name>FICKS</name>

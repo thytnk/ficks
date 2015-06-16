@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +32,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @Controller
 @RequestMapping("/admin/documents")
-public class DocumentListController {
-    private Logger log = LoggerFactory.getLogger(DocumentListController.class);
+public class DocumentAdminController {
+    private Logger log = LoggerFactory.getLogger(DocumentAdminController.class);
 
     @Autowired
     private DocumentService documentService;
@@ -94,6 +95,8 @@ public class DocumentListController {
         document.setOriginalFileName(originalFilename(multipartFile));
         documentService.saveDataAndFile(document, multipartFile.getBytes());
 
+        model.addAttribute("appStatus", "success");
+
         log.info("add success: {}", document.getCode());
         return "admin/documents/add";
     }
@@ -131,6 +134,10 @@ public class DocumentListController {
             document.setOriginalFileName(originalFilename(multipartFile));
             documentService.saveDataAndFile(document, multipartFile.getBytes());
         }
+
+        List<String> appMessages = new ArrayList<>();
+        appMessages.add("success.update.resume");
+        model.addAttribute("appMessages", appMessages);
 
         log.info("update success: {}", document.getCode());
         return "redirect:/admin/documents";

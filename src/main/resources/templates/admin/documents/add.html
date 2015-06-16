@@ -47,7 +47,11 @@
       <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       -->
     </div>
-
+    <div th:if="${appMessages != 'null'}" class="alert alert-success">
+      <ul>
+        <li th:each="m : ${appMessages}" th:text="#{#m}">Message</li>
+      </ul>
+    </div>
     <div class="form-group">
       <label class="col col-xs-12 col-sm-3 col-md-3 control-label">種類別<b>*</b></label>
       <div class="col col-sm-9 col-md-9 btn-group">

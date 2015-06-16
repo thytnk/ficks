@@ -1,0 +1,8 @@
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" th:fragment="pager">
+<div class="alert alert-info row pager">
+  <span class="previous"><a href="#" class="prev-page" th:if="${! list.first}"><span aria-hidden="true">&laquo;</span> 前へ</a></span>
+  検索結果:<span th:text="${list.totalElements}"></span>件
+  (<span th:text="${list.number + 1}"></span> / <span th:text="${list.totalPages}"></span> ページ)
+  <span class="next"><a href="#" class="next-page" th:if="${! list.last}">次へ <span aria-hidden="true">&raquo;</span></a></span>
+</div>
+</html>

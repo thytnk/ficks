@@ -1,24 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta http-equiv="pragma" content="no-cache"/>
-  <meta http-equiv="cache-control" content="no-cache"/>
-
-  <title>FICKS(プロトタイプ): FSL Intranet Community Knowledge management System</title>
-  <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
-  <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{/css/bootstrap-theme.min.css}"/>
-  <link rel="stylesheet" href="/css/lib/pnotify.custom.min.css" th:href="@{/css/lib/pnotify.custom.min.css}"/>
-  <link rel="shortcut icon" href="favicon.ico" th:href="@{/favicon.ico}"/>
-  <link rel="stylesheet" href="/css/screen.css?b" th:href="@{/css/screen.css?b}"/>
-
-  <!--[if lt IE 9]>
-    <script src="/js/lib/html5shiv.min.js"></script>
-    <script src="/js/lib/respond.min.js"></script>
-  <![endif]-->
-</head>
+<head th:include="common/head :: head"></head>
 <body>
 
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -43,6 +25,7 @@
 <div class="container">
 <div class="row small">
   <form id="search" action="#" th:action="@{/documents/search}" th:object="${documentSearchCommand}" method="GET">
+    <input id="page" name="page" type="hidden" th:value="${list.number}"/>
 
     <div id="categories" class="row container">
       <div class="col-sm-8 row btn-group">
@@ -143,19 +126,7 @@
       </li>
     </ul>-->
 
-    <ul class="list-group ">
-
-      <li class="list-group-item"><b>リンクメニュー</b></li>
-      <li class="list-group-item"><a target="_blank" href="http://partner.fujitsu.com/PFP/index.jsp">PFP</a></li>
-      <li class="list-group-item"><a target="_blank" href="https://ikb.fujitsu.com/">IKB</a></li>
-      <li class="list-group-item"><a target="_blank" href="http://partner.fujitsu.com/partner/promotion/priority/">拡販.com</a></li>
-      <li class="list-group-item"><a target="_blank" href="http://partner.fujitsu.com/partner/promotion/priority/sales/sells/factory/?b">提案書ファクトリー</a></li>
-      <li class="list-group-item"><a target="_blank" href="http://partner.fujitsu.com/partner/tech/seinfo/">SE.com</a></li>
-
-      <li class="list-group-item"><a target="_blank" href="http://www.fujitsu.com/jp/">富士通</a></li>
-      <li class="list-group-item"><a target="_blank" href="http://jyoho-sv.fisl.jp/jyouhou/bunkyo/s_bunkyo/default.htm">文教イントラネット</a></li>
-      <li class="list-group-item"><a target="_blank" href="http://jyoho-sv.fisl.jp/jiki_toppage.htm">SSソリューション支援部</a></li>
-    </ul>
+    <div th:include="common/link-menu :: link-menu"></div>
   </div>
 
 
@@ -167,67 +138,65 @@
     </div>
     <h2 class="row" th:if="${mode=='new'}">新着情報</h2>
 
-    <div class="alert alert-info row" th:if="${mode=='search'}">
-      検索結果:<span th:text="${list.totalElements}"></span>件
-    </div>
+    <div th:include="documents/pager :: pager"
+         th:if="${mode=='search'}"></div>
 
-        <ul id="documents" class="list-group">
+    <ul id="documents" class="list-group">
 
-          <li class="list-group-item row" th:each="doc : ${list.content}">
+      <li class="list-group-item row" th:each="doc : ${list.content}">
 
-          <div class="col-sm-12">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-9">
             <div class="row">
-              <div class="col-sm-9">
-                <div class="row">
-                  <p class="col-sm-12">
-                    <label title="文書コード" th:text="*{doc.code}">ZXX-XXXX:</label>
-                    <span title="ファイル名" th:text="*{doc.fileName}">FILENAME</span>
-                  </p>
-                </div>
-                <div class="row">
-                  <p class="col-sm-12">
-                    <span class="label" th:attrappend="class=${' label-category-' + doc.category}" th:text="*{categories[doc.category]}"></span>
-                    <span title="分野" th:if="${doc.area != null}" th:text="*{areas[doc.area]}"></span> /
-                    <span title="ドキュメント種類" th:if="${doc.purpose != null}" th:text="*{purposes[doc.purpose]}"></span> /
-                    <span title="成否" th:if="${doc.result != null}" th:text="*{results[doc.result]}"></span>
-                    <span title="成否要因" th:if="${doc.reason != null}" th:text="'（' + ${reasons[doc.reason]} + '）'"></span>
-                  </p>
-                </div>
-                <div class="row" th:if="${doc.customerName != null}">
-                  <p class="col-sm-12" title="顧客名"><label th:text="*{doc.customerName}">顧客名:</label></p>
-                </div>
-                <div class="row" title="コメント" th:if="${doc.description != null and doc.description != ''}"><pre class="col-sm-12 small" th:text="*{doc.description}"></pre>
-                </div>
-              </div>
-              <div class="col-sm-3">
-                <div class="row small doc_author">
-                  <span class="col-sm-12" title="担当者・発行日"
-                          ><span th:text="*{doc.authorName}"></span
-                          >・<span th:if="${doc.publishDate != null}" th:text="${#calendars.format(doc.publishDate,'yyyy/MM/dd')}"></span></span>
-                </div>
-                <div class="row small doc_thumbnail">
-                  <a class="col-sm-12 download-link" href="/documents/" th:attrappend="href=${doc.code} + '/download'" title="ダウンロード">
-                    <img src="/thumbnail/" th:attrappend="src=${doc.code} + '.jpg'" alt="NO IMAGE" class="img-thumbnail"/>
-                    <p><span class="glyphicon glyphicon-download-alt"></span></p>
-                  </a>
-                </div>
-              </div>
+              <p class="col-sm-12">
+                <label title="文書コード" th:text="*{doc.code}">ZXX-XXXX:</label>
+                <span title="ファイル名" th:text="*{doc.fileName}">FILENAME</span>
+              </p>
+            </div>
+            <div class="row">
+              <p class="col-sm-12">
+                <span class="label" th:attrappend="class=${' label-category-' + doc.category}" th:text="*{categories[doc.category]}"></span>
+                <span title="分野" th:if="${doc.area != null}" th:text="*{areas[doc.area]}"></span> /
+                <span title="ドキュメント種類" th:if="${doc.purpose != null}" th:text="*{purposes[doc.purpose]}"></span> /
+                <span title="成否" th:if="${doc.result != null}" th:text="*{results[doc.result]}"></span>
+                <span title="成否要因" th:if="${doc.reason != null}" th:text="'（' + ${reasons[doc.reason]} + '）'"></span>
+              </p>
+            </div>
+            <div class="row" th:if="${doc.customerName != null}">
+              <p class="col-sm-12" title="顧客名"><label th:text="*{doc.customerName}">顧客名:</label></p>
+            </div>
+            <div class="row" title="コメント" th:if="${doc.description != null and doc.description != ''}"><pre class="col-sm-12 small" th:text="*{doc.description}"></pre>
             </div>
           </div>
-          </li>
-        </ul>
+          <div class="col-sm-3">
+            <div class="row small doc_author">
+              <span class="col-sm-12" title="担当者・発行日"
+                      ><span th:text="*{doc.authorName}"></span
+                      >・<span th:if="${doc.publishDate != null}" th:text="${#calendars.format(doc.publishDate,'yyyy/MM/dd')}"></span></span>
+            </div>
+            <div class="row small doc_thumbnail">
+              <a class="col-sm-12 download-link" href="/documents/" th:attrappend="href=${doc.code} + '/download'" title="ダウンロード">
+                <img src="/thumbnail/" th:attrappend="src=${doc.code} + '.jpg'" alt="NO IMAGE" class="img-thumbnail"/>
+                <p><span class="glyphicon glyphicon-download-alt"></span></p>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
+      </li>
+    </ul>
+
+    <div th:include="documents/pager :: pager"
+         th:if="${mode=='search' and list.totalElements > 10}"></div>
+
+  </div>
 </div>
 
-<div id="footer" class="navbar navbar-default navbar-fixed-bottom">
+
+  <div th:include="common/footer :: footer"></div>
 </div>
-</div>
-<script src="/js/lib/modernizr.js"></script>
-<script src="/js/lib/jquery-1.11.2.min.js"></script>
-<script src="/js/lib/bootstrap.min.js"></script>
-<script src="/js/lib/bootstrap-datepicker.min.js"></script>
-<script src="/js/lib/bootstrap-datepicker.ja.min.js"></script>
-<script src="/js/lib/pnotify.custom.min.js"></script>
+<div th:include="common/script-lib :: script-lib"></div>
 <script>
 $(function() {
 /*
@@ -265,6 +234,18 @@ $(function() {
     format: 'yyyy/mm/dd',
     language: 'ja'
   });
+
+  $('.next-page').click(function() {
+    $('#page').val(parseInt($('#page').val(), 10) + 1);
+    $('#searchButton').click();
+  });
+
+  $('.prev-page').click(function() {
+    $("#page").val(parseInt($("#page").val(), 10) - 1);
+    $('#searchButton').click();
+  });
+
+
   //}
 /*
   var notice = new PNotify({

@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrOperations;
 import org.springframework.data.solr.core.query.*;
@@ -47,8 +49,6 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         query.addSort(sortByRegisterDate());
         Page<Document> resultPage = solrTemplate.queryForPage(query, Document.class);
 
-//        List<Document> docs = resultPage.getContent();
-
         gui.addDropDowns(model);
         model.addAttribute("list", resultPage);
         model.addAttribute("mode", "new");
@@ -56,19 +56,22 @@ public class DocumentController extends WebMvcConfigurerAdapter {
     }
 
     @RequestMapping(value="search",method=GET)
-    public String search(DocumentSearchCommand documentSearchCommand, Model model) {
+    public String search(DocumentSearchCommand documentSearchCommand, Model model,
+                         @RequestParam(value="page", defaultValue="0") int page) {
         log.info("search: {}", documentSearchCommand);
         FacetQuery query = new SimpleFacetQuery(documentSearchCommand.searchCriteria());
         query.setFacetOptions(new FacetOptions().addFacetOnField("doc_area").addFacetOnField("doc_purpose"));
-        query.addSort(sortByRegisterDate());
-        query.setRows(100);
+//        query.addSort(sortByRegisterDate());
+//        query.setRows(5);
+        query.setPageRequest(new PageRequest(page, 10, Sort.Direction.DESC, "doc_register_date"));
         FacetPage<Document> resultPage = solrTemplate.queryForFacetPage(query, Document.class);
 
-//        List<Document> docs = resultPage.getContent();
         Page<FacetFieldEntry> areaFacet = resultPage.getFacetResultPage("doc_area");
         model.addAttribute("areaFacet", areaFacet);
+
         Page<FacetFieldEntry> purposeFacet = resultPage.getFacetResultPage("doc_purpose");
         model.addAttribute("purposeFacet", purposeFacet);
+
 /*        for (Page<? extends FacetEntry> page : resultPage.getAllFacets()) {
             page.
             for (FacetEntry facetEntry : page.getContent()) {
