@@ -235,14 +235,18 @@ $(function() {
     language: 'ja'
   });
 
+  $('#searchButton').click(function() {
+    $('#page').val(0);
+  });
+
   $('.next-page').click(function() {
     $('#page').val(parseInt($('#page').val(), 10) + 1);
-    $('#searchButton').click();
+    $('#search').submit();
   });
 
   $('.prev-page').click(function() {
     $("#page").val(parseInt($("#page").val(), 10) - 1);
-    $('#searchButton').click();
+    $('#search').submit();
   });
 
 
