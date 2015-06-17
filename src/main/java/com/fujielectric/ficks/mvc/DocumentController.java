@@ -14,6 +14,7 @@ import org.springframework.data.solr.core.query.*;
 
 import org.springframework.data.solr.core.query.result.FacetFieldEntry;
 import org.springframework.data.solr.core.query.result.FacetPage;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,11 @@ public class DocumentController extends WebMvcConfigurerAdapter {
 
     @Autowired
     private DocumentService documentService;
+
+    @ModelAttribute
+    User loginUser(@AuthenticationPrincipal LoginUserDetails loginUserDetails) {
+        return loginUserDetails.getUser();
+    }
 
     @RequestMapping(method=GET)
     public String home(DocumentSearchCommand documentSearchCommand, Model model) {

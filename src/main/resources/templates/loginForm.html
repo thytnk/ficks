@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head :: head"></head>
+<body>
+<nav th:include="common/header :: header"></nav>
+<div class="container">
+  <form class="form-signin" method="post" th:action="@{/login}">
+    <div th:if="${param.error}" class="alert alert-danger">
+      Invalid username and password.
+    </div>
+    <input type="text" class="form-control" name="empNumber" required="required" autofocus="autofocus"/>
+    <!--
+    <input type="password" class="form-control" name="password" required="required"/>
+    -->
+    <button class="btn btn-lg btn-primary btn-block" type="submit">log in</button>
+  </form>
+</div>
+</body>
+</html>

@@ -1,44 +1,10 @@
 <!DOCTYPE HTML>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta http-equiv="pragma" content="no-cache"/>
-  <meta http-equiv="cache-control" content="no-cache"/>
-
-  <title>FICKS(プロトタイプ): FSL Intranet Community Knowledge management System</title>
-  <link rel="stylesheet" href="/css/bootstrap.min.css"       th:href="@{/css/bootstrap.min.css}"/>
-  <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{/css/bootstrap-theme.min.css}"/>
-  <link rel="stylesheet" href="/css/screen.css?b"            th:href="@{/css/screen.css?b}"/>
-  <link rel="shortcut icon" href="favicon.ico"               th:href="@{/favicon.ico}"/>
-
-  <!--[if lt IE 9]>
-  <script src="/js/lib/html5shiv.min.js"></script>
-  <script src="/js/lib/respond.min.js"></script>
-  <![endif]-->
-</head>
+<head th:include="common/head :: head"></head>
 <body>
 
-<nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a href="/documents" class="navbar-brand"><img src="/img/logo-mid.png" alt="FICKS:"/></a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <h1 class="navbar-text"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem (プロトタイプ)</h1>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="/documents" class="glyphicon glyphicon-home" aria-hidden="true"> HOME</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+<nav th:include="common/header :: header"></nav>
+
 <div class="container">
   <form id="add" th:action="@{/admin/documents/add}" th:object="${document}"
       method="post" enctype="multipart/form-data" class="form-horizontal">
@@ -235,13 +201,7 @@
     </div>
   </form>
 </div>
-
-<script src="/js/lib/modernizr.js"></script>
-<script src="/js/lib/jquery-1.11.2.min.js"></script>
-<script src="/js/lib/bootstrap.min.js"></script>
-<script src="/js/lib/bootstrap-datepicker.min.js"></script>
-<script src="/js/lib/bootstrap-datepicker.ja.min.js"></script>
-<script src="/js/lib/pnotify.custom.min.js"></script>
+<div th:include="common/script-lib :: script-lib"></div>
 <script>
 $(function() {
   $('#publishDate').datepicker({
