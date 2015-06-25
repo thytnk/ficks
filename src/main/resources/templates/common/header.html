@@ -11,10 +11,10 @@
       <a href="/documents" class="navbar-brand"><img src="/img/logo-mid.png" alt="FICKS:"/></a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
-      <h1 class="navbar-text"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem (プロトタイプ)</h1>
+      <h1 class="navbar-text"> <b>F</b>SL <b>I</b>ntranet <b>C</b>ommunity <b>K</b>nowledge management <b>S</b>ystem</h1>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/documents" class="glyphicon glyphicon-home" aria-hidden="true"> HOME</a></li>
-        <li th:text="${user.empName}"></li>
+        <li><a href="#" class="glyphicon" th:text="${user.empName}" th:if="${user != null}"></a></li>
       </ul>
     </div>
   </div>

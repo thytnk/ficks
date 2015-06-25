@@ -1,6 +1,7 @@
 package com.fujielectric.ficks.mvc;
 
 import com.fujielectric.ficks.domain.*;
+import com.fujielectric.ficks.jpa.DocumentAccessRepository;
 import com.fujielectric.ficks.solr.SolrDocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,9 @@ public class DocumentController extends WebMvcConfigurerAdapter {
 
     @Autowired
     private SolrDocumentRepository documentRepository;
+
+    @Autowired
+    private DocumentAccessRepository documentAccessRepository;
 
     @Autowired
     private SolrOperations solrTemplate;
@@ -94,11 +98,15 @@ public class DocumentController extends WebMvcConfigurerAdapter {
     }
 
     @RequestMapping(value="/{code}/download", produces="application/force-download")
-    public void download(HttpServletResponse res, @PathVariable("code")String code) throws IOException {
+    public void download(HttpServletResponse res, @PathVariable("code")String code,
+                         @AuthenticationPrincipal LoginUserDetails loginUserDetails) throws IOException {
         log.info("download: {}", code);
         Document doc = documentRepository.findByCode(code);
         if (doc == null)
             return;
+
+        DocumentAccess documentAccess = new DocumentAccess(loginUserDetails.getUser(), doc);
+        documentAccessRepository.save(documentAccess);
 
         Path path = documentService.getPathOf(code);
         String dFilename = new String(doc.getFileName().getBytes("Windows-31J"), "ISO-8859-1");
