@@ -6,7 +6,7 @@
 <nav th:include="common/header :: header"></nav>
 
 <div class="container">
-  <form id="add" th:object="${document}"
+  <form id="add" th:action="@{update}" th:object="${document}"
         method="post" enctype="multipart/form-data" class="form-horizontal">
     <div th:if="${#fields.hasErrors('all')}" class="alert alert-warning">
       <p th:text="#{common.error}">ErrorMessage</p>
@@ -136,7 +136,7 @@
     </div>
 
     <div class="form-group">
-      <label for="publishDate" class="col col-xs-12 col-sm-3 col-md-3 control-label">発行日</label>
+      <label for="publishDate" class="col col-xs-12 col-sm-3 col-md-3 control-label">発行日<b>*</b></label>
       <div class="col col-xs-10 col-sm-3 col-md-3">
         <input type="date" id="publishDate"  th:field="*{publishDate}" class="form-control"/>
       </div>

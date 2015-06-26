@@ -1,14 +1,13 @@
 package com.fujielectric.ficks.mvc.admin;
 
-import com.fujielectric.ficks.domain.Document;
-import com.fujielectric.ficks.domain.DocumentService;
-import com.fujielectric.ficks.domain.PrintDirection;
+import com.fujielectric.ficks.domain.*;
 import com.fujielectric.ficks.jpa.DocumentRepository;
 import com.fujielectric.ficks.mvc.GuiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,9 +43,15 @@ public class DocumentAdminController {
     @Autowired
     private GuiUtils gui;
 
+    @ModelAttribute
+    User loginUser(@AuthenticationPrincipal LoginUserDetails loginUserDetails) {
+        return loginUserDetails.getUser();
+    }
+
     @ResponseStatus(OK)
     @RequestMapping(method=GET)
-    String list(Model model) {
+    String list(Model model,
+                @AuthenticationPrincipal LoginUserDetails loginUserDetails) {
         List<Document> list = documentService.listSortedByDate();
         model.addAttribute("documents", list);
         return "admin/documents/index";
@@ -66,7 +71,8 @@ public class DocumentAdminController {
 
     @ResponseStatus(OK)
     @RequestMapping(value="add", method=GET)
-    String addForm(Document document, Model model) {
+    String addForm(Document document, Model model,
+                   @AuthenticationPrincipal LoginUserDetails loginUserDetails) {
         gui.addDropDowns(model);
         return "admin/documents/add";
     }
@@ -76,7 +82,8 @@ public class DocumentAdminController {
     String add(@Validated Document document,
                BindingResult result,
                Model model,
-               @RequestParam("file") MultipartFile multipartFile
+               @RequestParam("file") MultipartFile multipartFile,
+               @AuthenticationPrincipal LoginUserDetails loginUserDetails
     ) throws IOException {
         log.debug("add:");
         gui.addDropDowns(model);
@@ -103,7 +110,8 @@ public class DocumentAdminController {
 
     @ResponseStatus(OK)
     @RequestMapping(value="{code}/update", method=GET)
-    public String updateForm(@PathVariable("code") String code, Model model) {
+    public String updateForm(@PathVariable("code") String code, Model model,
+                             @AuthenticationPrincipal LoginUserDetails loginUserDetails) {
         gui.addDropDowns(model);
         Optional<Document> result = repository.findByCode(code);
         result.ifPresent(document -> model.addAttribute("document", document));
@@ -115,7 +123,8 @@ public class DocumentAdminController {
     String update(@Validated Document document,
                BindingResult result,
                Model model,
-               @RequestParam("file") MultipartFile multipartFile
+               @RequestParam("file") MultipartFile multipartFile,
+               @AuthenticationPrincipal LoginUserDetails loginUserDetails
     ) throws IOException {
         log.debug("update:");
         gui.addDropDowns(model);

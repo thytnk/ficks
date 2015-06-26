@@ -4,16 +4,25 @@
 <body>
 <nav th:include="common/header :: header"></nav>
 <div class="container">
+  <div class="row">
+    <div class="col-sm-3">
   <form class="form-signin" method="post" th:action="@{/login}">
     <div th:if="${param.error}" class="alert alert-danger">
-      Invalid username and password.
+      社員番号が無効です
     </div>
-    <input type="text" class="form-control" name="empNumber" required="required" autofocus="autofocus"/>
+
+    <p class="form-group">
+      <label class="control-label" for="empNumber">社員番号</label>
+      <input type="text" class="form-control" id="empNumber" name="empNumber" required="required" autofocus="autofocus"/>
+    </p>
+
     <!--
     <input type="password" class="form-control" name="password" required="required"/>
     -->
-    <button class="btn btn-lg btn-primary btn-block" type="submit">log in</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">ログイン</button>
   </form>
+    </div>
+  </div>
 </div>
 </body>
 </html>
