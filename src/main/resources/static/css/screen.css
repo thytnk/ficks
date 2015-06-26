@@ -43,6 +43,7 @@ pre {
 
 .doc_thumbnail {
   padding-left : 5px;
+  overflow: hidden;
   text-align: center;
 }
 
@@ -64,7 +65,7 @@ pre {
   width: 85%;
   z-index: 10;/*background:yellow;*/
   color: gray;
-  font-size: 4em;
+  font-size: 300%;
 }
 
 .download-link:hover p {

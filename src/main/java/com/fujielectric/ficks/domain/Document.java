@@ -13,6 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="documents")
@@ -148,6 +149,9 @@ public class Document {
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern="yyyy/MM/dd")
     private Date indexDate;
+
+    @OneToMany(mappedBy = "document", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<DocumentAccess> accessList;
 
     @PrePersist void onPrePersist() {
         if (isBlank(fileName)) {

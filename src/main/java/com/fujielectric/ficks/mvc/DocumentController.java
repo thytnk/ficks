@@ -2,6 +2,7 @@ package com.fujielectric.ficks.mvc;
 
 import com.fujielectric.ficks.domain.*;
 import com.fujielectric.ficks.jpa.DocumentAccessRepository;
+import com.fujielectric.ficks.jpa.DocumentRepository;
 import com.fujielectric.ficks.solr.SolrDocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,10 @@ public class DocumentController extends WebMvcConfigurerAdapter {
     private Logger log = LoggerFactory.getLogger(DocumentController.class);
 
     @Autowired
-    private SolrDocumentRepository documentRepository;
+    private SolrDocumentRepository solrDocumentRepository;
+
+    @Autowired
+    private DocumentRepository documentRepository;
 
     @Autowired
     private DocumentAccessRepository documentAccessRepository;
@@ -57,10 +61,14 @@ public class DocumentController extends WebMvcConfigurerAdapter {
     public String home(DocumentSearchCommand documentSearchCommand, Model model) {
         Query query = new SimpleQuery(new Criteria("id").isNotNull());
         query.addSort(sortByRegisterDate());
-        Page<Document> resultPage = solrTemplate.queryForPage(query, Document.class);
+        Page<Document> latestList = documentRepository.findLatest(new PageRequest(0, 10));
+        model.addAttribute("latestList", latestList);
+
+        Page<Document> mostAccessedList = documentRepository.findMostAccessed(new PageRequest(0, 10));
+        model.addAttribute("mostAccessedList", mostAccessedList);
+        model.addAttribute("list", mostAccessedList);
 
         gui.addDropDowns(model);
-        model.addAttribute("list", resultPage);
         model.addAttribute("mode", "new");
         return "documents";
     }
@@ -101,7 +109,7 @@ public class DocumentController extends WebMvcConfigurerAdapter {
     public void download(HttpServletResponse res, @PathVariable("code")String code,
                          @AuthenticationPrincipal LoginUserDetails loginUserDetails) throws IOException {
         log.info("download: {}", code);
-        Document doc = documentRepository.findByCode(code);
+        Document doc = solrDocumentRepository.findByCode(code);
         if (doc == null)
             return;
 

@@ -1,0 +1,54 @@
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" th:fragment="list-item">
+
+<div class="col-sm-12">
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="row">
+        <p class="col-sm-12">
+          <label title="文書コード" th:text="*{doc.code}">Z99-99999-99:</label>
+          <span title="ファイル名" th:text="*{doc.fileName}">FILENAME</span>
+          <span title="アクセス数" class="badge"
+                th:if="*{doc.accessList != null and #lists.size(doc.accessList) > 0}" th:text="*{#lists.size(doc.accessList)}">0</span>
+        </p>
+      </div>
+      <div class="row">
+        <p class="col-sm-12">
+          <span class="label" th:attrappend="class=${' label-category-' + doc.category}" th:text="*{categories[doc.category]}"></span>
+          <span title="分野" th:if="${doc.area != null}" th:text="*{areas[doc.area]}"></span> /
+          <span title="ドキュメント種類" th:if="${doc.purpose != null}" th:text="*{purposes[doc.purpose]}"></span> /
+          <span title="成否" th:if="${doc.result != null}" th:text="*{results[doc.result]}"></span>
+          <span title="成否要因" th:if="${doc.reason != null}" th:text="'（' + ${reasons[doc.reason]} + '）'"></span>
+        </p>
+      </div>
+      <div class="row" th:if="${doc.customerName != null}">
+        <p class="col-sm-12" title="顧客名"><label th:text="*{doc.customerName}">顧客名:</label></p>
+      </div>
+      <div class="row" title="コメント" th:if="${doc.description != null and doc.description != ''}"><pre class="col-sm-12 small" th:text="*{doc.description}"></pre>
+      </div>
+
+    </div>
+    <div class="col-sm-3">
+      <div class="row small doc_thumbnail">
+        <a class="col-sm-12 download-link" href="/documents/" th:attrappend="href=${doc.code} + '/download'" title="ダウンロード">
+          <img src="/thumbnail/" th:attrappend="src=${doc.code} + '.jpg'" alt="NO IMAGE" class="img-thumbnail"/>
+          <p><span class="glyphicon glyphicon-download-alt"></span></p>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 text-right text-muted small">
+      <span title="発行日"
+            th:if="${doc.publishDate != null}"
+            th:text="${#calendars.format(doc.publishDate,'yyyy/MM/dd')}">
+      </span>
+      <span title="部門名"
+            th:if="${doc.deptName != null and doc.deptName != ''}"
+            th:text="*{doc.deptName}">
+      </span>
+      <span title="担当者" th:text="*{doc.authorName}"></span>
+    </div>
+  </div>
+</div>
+
+</html>

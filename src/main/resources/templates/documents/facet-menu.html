@@ -1,0 +1,17 @@
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" th:fragment="facet-menu">
+<ul class="list-group " th:if="${areaFacet != null}">
+  <li class="list-group-item"><b>分野</b></li>
+  <li class="list-group-item" th:each="entry : ${areaFacet.content}">
+    <span th:text="${areasForString[entry.value]}"></span>
+    <span th:text="${entry.valueCount}" class="badge"></span>
+  </li>
+</ul>
+
+<ul class="list-group " th:if="${purposeFacet != null}">
+  <li class="list-group-item"><b>ドキュメント種類</b></li>
+  <li class="list-group-item" th:each="entry : ${purposeFacet.content}">
+    <span th:text="${purposesForString[entry.value]}"></span>
+    <span th:text="${entry.valueCount}" class="badge"></span>
+  </li>
+</ul>
+</html>

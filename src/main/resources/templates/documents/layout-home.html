@@ -1,0 +1,36 @@
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" th:fragment="layout-home">
+<div th:include="documents/search-form :: search-form" class="row small">
+</div>
+<hr/>
+<div class="row">
+  <div class="col-sm-2 hidden-xs">
+    <div th:include="common/link-menu :: link-menu"></div>
+  </div>
+
+  <div class="col-sm-10 col-xs-12">
+    <div class="alert alert-warning row small">
+      <p>※ ドキュメントは全て社外秘です。お取扱いについては、十分ご注意ください。</p>
+      <p>※ 本システムの掲載内容はドキュメント作成時点のものであり、
+      現在または掲載時点での内容を保証するものではありません。</p>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 col-xs-12">
+        <h2>アクセスランキング</h2>
+        <ul id="popularDocuments" class="list-group">
+          <li class="list-group-item row" th:each="doc : ${mostAccessedList.content}">
+            <div th:include="documents/list-item :: list-item"></div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm-6 col-xs-12">
+        <h2>新着情報</h2>
+        <ul id="newDocuments" class="list-group">
+          <li class="list-group-item row" th:each="doc : ${latestList.content}">
+            <div th:include="documents/list-item :: list-item"></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</html>
