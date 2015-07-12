@@ -48,9 +48,10 @@ public class DocumentService {
     }
 
     @Transactional
-    public void saveDataAndFile(Document document, byte[] fileData) {
+    public Document saveDataAndFile(Document document, byte[] fileData) {
         saveData(document);
         saveFile(document, fileData);
+        return document;
     }
 
     @Transactional

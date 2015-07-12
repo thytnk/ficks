@@ -1,0 +1,40 @@
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" th:fragment="layout-home">
+<div th:include="documents/search-form :: search-form" class="row small">
+</div>
+<hr/>
+<div class="row">
+  <div class="col-sm-2 hidden-xs">
+    <div th:include="common/link-menu :: link-menu"></div>
+  </div>
+
+  <div class="col-sm-10 col-xs-12">
+    <div class="alert alert-warning row small">
+      <p>※ ドキュメントは全て社外秘です。お取扱いについては、十分ご注意ください。</p>
+      <p>※ 本システムの掲載内容はドキュメント作成時点のものであり、
+      現在または掲載時点での内容を保証するものではありません。</p>
+    </div>
+
+    <ul class="row nav nav-pills nav-justified">
+      <li class="active"><a href="#tab1" data-toggle="tab">新着情報</a></li>
+      <li><a href="#tab2" data-toggle="tab">アクセスランキング</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane fade in active" id="tab1">
+        <ol id="newDocuments" class="list-group">
+          <li class="list-group-item row" th:each="doc : ${latestList.content}">
+            <div th:include="documents/list-item :: list-item"></div>
+          </li>
+        </ol>
+      </div>
+      <div class="tab-pane fade" id="tab2">
+        <ol id="popularDocuments" class="list-group">
+          <li class="list-group-item row"  th:each="doc : ${mostAccessedList.content}">
+            <div th:include="documents/list-item :: list-item"></div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+</html>

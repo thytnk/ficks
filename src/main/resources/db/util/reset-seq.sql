@@ -1,0 +1,1 @@
+select setval('documents_small_code_seq', 1)

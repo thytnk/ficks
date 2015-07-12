@@ -4,13 +4,13 @@
 <body>
 <nav th:include="common/header :: header"></nav>
 <div class="container">
-  <div th:include="documents/layout-home :: layout-home"
+  <div th:include="documents/layout-home-tab :: layout-home"
        th:if="${mode=='new'}"></div>
   <div th:include="documents/layout-search :: layout-search"
        th:if="${mode=='search'}"></div>
 </div>
 <div th:include="common/footer :: footer"></div>
 <div th:include="common/script-lib :: script-lib"></div>
-<script th:src="@{/js/search_form.js}"></script>
+<script th:src="@{/js/search_form.js?20150701c}"></script>
 </body>
 </html>

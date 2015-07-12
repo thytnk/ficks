@@ -106,7 +106,7 @@ public class Document {
 
     /** ファイル名 */
     @Indexed @Field("doc_file_name")
-    @Size(max=50)
+    @Size(max=200)
     @Pattern(regexp = "(.+\\.[a-zA-Z0-9]{3,5})?")
     private String fileName;
 

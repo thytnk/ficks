@@ -49,4 +49,14 @@ $(function() {
     $("#page").val(parseInt($("#page").val(), 10) - 1);
     $('#search').submit();
   });
+
+  $('#area-facet a').click(function() {
+    $('#search_area').val($(this).attr("data-facet-value"));
+    $('#searchButton').click();
+  });
+
+  $('#purpose-facet a').click(function() {
+    $('#search_purpose').val($(this).attr("data-facet-value"));
+    $('#searchButton').click();
+  });
 });

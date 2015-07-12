@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("empNumber")
                 .passwordParameter("empNumber")
                 .and();
+        http.csrf().disable();
         http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout**"))
                 .logoutSuccessUrl("/loginForm");

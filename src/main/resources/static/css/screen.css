@@ -92,6 +92,11 @@ pre {
 .glyphicon-ok { color: green; }
 .glyphicon-plus { color: red; }
 
+.nav-pills {
+  margin-top: -10px;
+  margin-bottom: 5px;
+}
+
 /*----------------------------------------------------------------------*/
 .btn-category-A {
   color: #ffffff;
