@@ -4,7 +4,7 @@
 <body>
 <nav th:include="common/header :: header"></nav>
 <div class="container">
-  <div class="row">
+  <div class="row" id="eggif" style="display:none">
     <div class="col-sm-3">
   <form class="form-signin" method="post" th:action="@{/login}">
     <div th:if="${param.error}" class="alert alert-danger">
@@ -24,5 +24,13 @@
     </div>
   </div>
 </div>
+<script th:src="@{/js/lib/jquery-1.11.2.min.js}"></script>
+<script th:src="@{/js/lib/egg.min.js}"></script>
+<script>
+var egg = new Egg();
+egg.addCode("up,up,down,down,left,right,left,right,b,a", function() {
+  $('#eggif').show();
+}).listen();
+</script>
 </body>
 </html>
