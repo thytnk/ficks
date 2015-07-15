@@ -1,5 +1,6 @@
 package com.fujielectric.ficks.mvc;
 
+import com.fujielectric.ficks.config.GuiProperties;
 import com.fujielectric.ficks.domain.*;
 import com.fujielectric.ficks.jpa.DocumentAccessRepository;
 import com.fujielectric.ficks.jpa.DocumentRepository;
@@ -9,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrOperations;
 import org.springframework.data.solr.core.query.*;
@@ -51,6 +51,14 @@ public class DocumentController extends WebMvcConfigurerAdapter {
 
     @Autowired
     private DocumentService documentService;
+
+    @Autowired
+    GuiProperties guiProperties;
+
+    @ModelAttribute
+    GuiProperties guiProperties() {
+        return guiProperties;
+    }
 
     @ModelAttribute
     User loginUser(@AuthenticationPrincipal LoginUserDetails loginUserDetails) {
