@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class GuiProperties {
+    private String forbidden;
     private String footer;
 }

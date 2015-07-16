@@ -4,6 +4,9 @@
 <body>
 <nav th:include="common/header :: header"></nav>
 <div class="container">
+  <div id="message" class="alert alert-warning row small" th:utext="${guiProperties.forbidden}">
+  </div>
+
   <div class="row" id="eggif" style="display:none">
     <div class="col-sm-3">
   <form class="form-signin" method="post" th:action="@{/login}">
@@ -24,12 +27,15 @@
     </div>
   </div>
 </div>
+<div th:include="common/footer :: footer"></div>
 <script th:src="@{/js/lib/jquery-1.11.2.min.js}"></script>
 <script th:src="@{/js/lib/egg.min.js}"></script>
 <script>
 var egg = new Egg();
 egg.addCode("up,up,down,down,left,right,left,right,b,a", function() {
+  $('#message').hide();
   $('#eggif').show();
+  $('#empNumber').focus();
 }).listen();
 </script>
 </body>
