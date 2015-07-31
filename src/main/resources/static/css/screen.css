@@ -97,6 +97,10 @@ pre {
   margin-bottom: 5px;
 }
 
+#clearButton {
+  border-color: silver;
+}
+
 /*----------------------------------------------------------------------*/
 .btn-category-A {
   color: #ffffff;

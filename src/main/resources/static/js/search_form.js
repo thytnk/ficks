@@ -59,4 +59,10 @@ $(function() {
     $('#search_purpose').val($(this).attr("data-facet-value"));
     $('#searchButton').click();
   });
+
+  $('#clearButton').click(function() {
+    $('.form-control').val('');
+    $(':checkbox').prop('checked', true);
+    $("#categories input[type='checkbox']").parent().removeClass('gray');
+  });
 });

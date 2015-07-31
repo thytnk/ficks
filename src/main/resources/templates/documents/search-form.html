@@ -65,7 +65,7 @@
       </div>
     </div>
 
-    <p class="col-sm-6 form-group">
+    <p class="col-sm-5 form-group">
       <label class="control-label" for="search_keyword">キーワード</label>
       <input type="search" id="search_keyword" th:field="*{keyword}" class="form-control" autofocus="autofocus"/>
     </p>
@@ -73,6 +73,11 @@
     <p class="col-sm-2 form-group">
       <label class="control-label">&nbsp;</label>
       <button type="submit" id="searchButton" class="form-control btn btn-primary">検索</button>
+    </p>
+
+    <p class="col-sm-1 form-group">
+      <label class="control-label">&nbsp;</label>
+      <button type="button" id="clearButton" class="form-control btn">クリア</button>
     </p>
   </div>
 
