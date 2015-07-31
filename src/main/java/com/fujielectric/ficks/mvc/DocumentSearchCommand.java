@@ -66,15 +66,15 @@ public class DocumentSearchCommand {
 
         if (customer != null && !"".equals(customer)) {
             log.debug("customer: {}", customer);
-            for (String s : customer.split("\\s")) {
-                criteria = criteria.and(new Criteria("doc_customer_name").contains(s));
+            for (String s : customer.replaceAll(":"," ").split("[\\s　]+")) {
+                criteria = criteria.and(new Criteria("doc_customer_name").expression(s));
             }
         }
 
         if (author != null && !"".equals(author)) {
             log.debug("author: {}", author);
-            for (String s : author.split("\\s")) {
-                criteria = criteria.and(new Criteria("doc_author_name").contains(s)
+            for (String s : author.replaceAll(":"," ").split("[\\s　]+")) {
+                criteria = criteria.and(new Criteria("doc_author_name").expression(s)
                         .or(new Criteria("doc_emp_number").is(s)));
             }
         }
@@ -114,11 +114,12 @@ public class DocumentSearchCommand {
         }
 
         if (keyword != null && !"".equals(keyword)) {
-            log.debug("keyword: {}", keyword.split("\\s"));
-            List<String> keywords = Arrays.asList(keyword.split("\\s"));
-            for (String keyword: keywords) {
-                criteria = criteria.and(new Criteria("text").expression(keyword));
-
+            log.debug("keyword: {}", keyword.split("[\\s　]+"));
+            List<String> keywords = Arrays.asList(keyword.replaceAll(":"," ").split("[\\s　]+"));
+//            criteria = criteria.and(new Criteria("text").expression(keyword.replaceAll(":"," ")));
+            for (String s: keywords) {
+//                criteria = criteria.and(new Criteria("text").contains(s).or("doc_code").is(keyword));
+                criteria = criteria.and(new Criteria("text").expression(s));
                 /*
                 criteria = criteria.and(new Criteria("content").contains(keyword)
                         .or("resourcename").contains(keyword)

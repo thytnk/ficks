@@ -89,7 +89,8 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         query.setFacetOptions(new FacetOptions().addFacetOnField("doc_area").addFacetOnField("doc_purpose"));
 //        query.addSort(sortByRegisterDate());
 //        query.setRows(5);
-        query.setPageRequest(new PageRequest(page, 10, Sort.Direction.DESC, "doc_register_date"));
+//        query.setPageRequest(new PageRequest(page, 10, Sort.Direction.DESC, "doc_register_date"));
+        query.setPageRequest(new PageRequest(page, 10));
         FacetPage<Document> resultPage = solrTemplate.queryForFacetPage(query, Document.class);
 
         Page<FacetFieldEntry> areaFacet = resultPage.getFacetResultPage("doc_area");
