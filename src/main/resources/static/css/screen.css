@@ -101,6 +101,8 @@ pre {
   border-color: silver;
 }
 
+.disabled-true { background: silver; }
+
 /*----------------------------------------------------------------------*/
 .btn-category-A {
   color: #ffffff;

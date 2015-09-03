@@ -6,7 +6,7 @@
 
     <groupId>com.fujielectric.ficks</groupId>
     <artifactId>ficks</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <name>FICKS</name>
     <description>Intranet Community Knowledge management System</description>

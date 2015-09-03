@@ -132,11 +132,6 @@ public class Document {
     @Indexed @Field("doc_disabled")
     private boolean disabled;
 
-    /** サムネイル印刷方向 */
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private PrintDirection printDirection;
-
     /** サムネイル印刷日時 */
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern="yyyy/MM/dd")

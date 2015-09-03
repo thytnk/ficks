@@ -16,7 +16,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr th:each="d : ${documents}">
+      <tr th:each="d : ${documents}" th:attrappend="class=${'disabled-' + d.disabled}">
         <td><a href="#" th:href="@{/admin/documents/} + ${d.code} + '/update'" th:text="${d.code}"></a></td>
         <td>
           <span th:if="${d.indexed}" class="glyphicon glyphicon-ok"></span>

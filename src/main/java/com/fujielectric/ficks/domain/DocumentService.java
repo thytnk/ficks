@@ -99,6 +99,7 @@ public class DocumentService {
         return Paths.get(rootDirectory, document.getCode(), document.getFileName());
     }
 
+
     /** 文書のインデックスを更新 */
     public void updateIndex(Document document) {
         PartialUpdate update = new PartialUpdate("id", document.getId());

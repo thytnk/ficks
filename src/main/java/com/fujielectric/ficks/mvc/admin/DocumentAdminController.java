@@ -38,6 +38,9 @@ public class DocumentAdminController {
     private DocumentService documentService;
 
     @Autowired
+    private ThumbnailService thumbnailService;
+
+    @Autowired
     private DocumentRepository repository;
 
     @Autowired
@@ -61,10 +64,9 @@ public class DocumentAdminController {
     Document setupDefaultDocument() {
         Document document = new Document();
         document.setCategory("A");
-        document.setArea(99);
-        document.setPurpose(99);
-        document.setResult(9);
-        document.setPrintDirection(PrintDirection.Horizontal);
+//        document.setArea(99);
+//        document.setPurpose(99);
+//        document.setResult(9);
         document.setIndexed(false);
         return document;
     }
@@ -83,6 +85,7 @@ public class DocumentAdminController {
                BindingResult result,
                Model model,
                @RequestParam("file") MultipartFile multipartFile,
+               @RequestParam("thumbnail") MultipartFile thumbnailFile,
                @AuthenticationPrincipal LoginUserDetails loginUserDetails
     ) throws IOException {
         log.debug("add:");
@@ -92,20 +95,27 @@ public class DocumentAdminController {
             result.addError(new ObjectError("file", "{NotBlank.file}"));
         }
 
+/*        if (!thumbnailFile.isEmpty()) {
+            if (!thumbnailFile.getName().endsWith(".jpg"))
+                result.addError(new ObjectError("thumbnail", "{typeMismatch}"));
+        }*/
+
         if (result.hasErrors()) {
-            for (ObjectError oe : result.getAllErrors()) {
-                log.info("has error: {} - {}", oe.toString(), oe.getDefaultMessage());
-            }
-            return "admin/documents/add";
+            result.getAllErrors().forEach(oe -> log.info("入力エラー: {} - {}", oe.toString(), oe.getDefaultMessage()));
+            return "/admin/documents/add";
         }
 
         document.setOriginalFileName(originalFilename(multipartFile));
         documentService.saveDataAndFile(document, multipartFile.getBytes());
 
+        if (!thumbnailFile.isEmpty()) {
+            thumbnailService.saveThumbnail(document, thumbnailFile.getBytes());
+        }
+
         model.addAttribute("appStatus", "success");
 
         log.info("add success: {}", document.getCode());
-        return "admin/documents/add";
+        return "redirect:/admin/documents/add";
     }
 
     @ResponseStatus(OK)
@@ -124,17 +134,19 @@ public class DocumentAdminController {
                BindingResult result,
                Model model,
                @RequestParam("file") MultipartFile multipartFile,
+               @RequestParam("thumbnail") MultipartFile thumbnailFile,
                @AuthenticationPrincipal LoginUserDetails loginUserDetails
     ) throws IOException {
         log.debug("update:");
         gui.addDropDowns(model);
-
-
+/*
+        if (!thumbnailFile.isEmpty() && !thumbnailFile.getName().endsWith(".jpg")) {
+            result.addError(new ObjectError("thumbnail", "{typeMismatch}"));
+        }
+*/
         if (result.hasErrors()) {
-            for (ObjectError oe : result.getAllErrors()) {
-                log.info("has error: {} - {}", oe.toString(), oe.getDefaultMessage());
-            }
-            return "admin/documents/update";
+            result.getAllErrors().forEach(oe -> log.info("入力エラー: {} - {}", oe.toString(), oe.getDefaultMessage()));
+            return "/admin/documents/update";
         }
 
         if (multipartFile.isEmpty()) {
@@ -142,6 +154,10 @@ public class DocumentAdminController {
         } else {
             document.setOriginalFileName(originalFilename(multipartFile));
             documentService.saveDataAndFile(document, multipartFile.getBytes());
+        }
+
+        if (!thumbnailFile.isEmpty()) {
+            thumbnailService.saveThumbnail(document, thumbnailFile.getBytes());
         }
 
         List<String> appMessages = new ArrayList<>();

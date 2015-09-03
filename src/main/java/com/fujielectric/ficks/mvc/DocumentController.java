@@ -119,8 +119,10 @@ public class DocumentController extends WebMvcConfigurerAdapter {
                          @AuthenticationPrincipal LoginUserDetails loginUserDetails) throws IOException {
         log.info("download: {}", code);
         Document doc = solrDocumentRepository.findByCode(code);
-        if (doc == null)
+        if (doc == null) {
+            log.error("download failed: {}", code);
             return;
+        }
 
         DocumentAccess documentAccess = new DocumentAccess(loginUserDetails.getUser(), doc);
         documentAccessRepository.save(documentAccess);
