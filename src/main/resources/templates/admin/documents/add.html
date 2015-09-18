@@ -126,7 +126,7 @@
     <div class="form-group">
       <label for="description" class="col col-xs-12 col-sm-3 col-md-3 control-label">コメント</label>
       <div class="col col-xs-10 col-sm-7 col-md-7">
-        <textarea id="description" th:field="*{description}" class="form-control"></textarea>
+        <textarea id="description" th:field="*{description}" class="form-control" rows="10" cols="60"></textarea>
         <p class="help-block error-text" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
       </div>
     </div>

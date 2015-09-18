@@ -6,21 +6,19 @@ import com.fujielectric.ficks.jpa.DocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.stereotype.Controller;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-@RestController
+@Controller
 @RequestMapping("/api/documents")
 public class DocumentRestController {
     private Logger log = LoggerFactory.getLogger(DocumentRestController.class);
@@ -33,7 +31,7 @@ public class DocumentRestController {
 
     @ResponseStatus(OK)
     @RequestMapping(method=POST)
-    Document add(@Validated Document document,
+    void add(@Validated Document document,
                BindingResult result,
                @RequestParam("file") MultipartFile multipartFile
     ) throws IOException {
@@ -47,13 +45,15 @@ public class DocumentRestController {
             for (ObjectError oe : result.getAllErrors()) {
                 log.info("has error: {} - {}", oe.toString(), oe.getDefaultMessage());
             }
-            return null;
+            throw new IllegalArgumentException();
+            //return 400;
         }
         // APIではOriginalFileNameも既に入っている想定
         Document resultDocument = documentService.saveDataAndFile(document, multipartFile.getBytes());
 
         log.info("add success: {}", document.getCode());
-        return resultDocument;
+        return;
+        //return resultDocument;
     }
 
     @ResponseStatus(OK)

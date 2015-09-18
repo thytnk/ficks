@@ -28,6 +28,9 @@ public class GuiUtils {
     @Autowired
     private ReasonRepository reasonRepository;
 
+    @Autowired
+    private LinkRepository linkRepository;
+
     private Sort sortByDisplayOrder = new Sort(Sort.Direction.ASC, "displayOrder");
 
     public void addDropDowns(Model model) {
@@ -36,6 +39,12 @@ public class GuiUtils {
         addPurposes(model);
         addResults(model);
         addReasons(model);
+        addLinks(model);
+    }
+
+    private void addLinks(Model model) {
+        List<Link> links = linkRepository.findAll(sortByDisplayOrder);
+        model.addAttribute("links", links);
     }
 
     private void addCategories(Model model) {

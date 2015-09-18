@@ -102,7 +102,7 @@ public class DocumentAdminController {
 
         if (result.hasErrors()) {
             result.getAllErrors().forEach(oe -> log.info("入力エラー: {} - {}", oe.toString(), oe.getDefaultMessage()));
-            return "/admin/documents/add";
+            return "admin/documents/add";
         }
 
         document.setOriginalFileName(originalFilename(multipartFile));
@@ -146,7 +146,7 @@ public class DocumentAdminController {
 */
         if (result.hasErrors()) {
             result.getAllErrors().forEach(oe -> log.info("入力エラー: {} - {}", oe.toString(), oe.getDefaultMessage()));
-            return "/admin/documents/update";
+            return "admin/documents/update";
         }
 
         if (multipartFile.isEmpty()) {

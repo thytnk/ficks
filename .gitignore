@@ -46,3 +46,4 @@ logs/
 ### specific ###
 /src/main/resources/db/migration/V1_07__Documents_Data.sql
 /src/main/resources/db/migration/V1_08__Documents_code.sql
+/src/main/resources/db/migration/V1_19__links_data.sql

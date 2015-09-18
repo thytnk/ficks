@@ -3,6 +3,8 @@ package com.fujielectric.ficks.domain;
 import lombok.Data;
 import static org.apache.commons.lang3.StringUtils.leftPad;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.beans.Field;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
@@ -85,7 +87,7 @@ public class Document {
 
     /** 従業員番号 */
     @Indexed @Field("doc_emp_number")
-    @Pattern(regexp = "(\\d{6})?", message="半角数字6文字です。")
+    @Pattern(regexp = "(\\d{5,6})?", message="半角数字6文字です。")
     private String empNumber;
 
     /** 担当者名 */
@@ -147,6 +149,14 @@ public class Document {
 
     @OneToMany(mappedBy = "document", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DocumentAccess> accessList;
+
+    public void setEmpNumber(String value) {
+        if (value != null && value.length() == 5) {
+            empNumber = StringUtils.leftPad(value, 6, '0');
+        } else {
+            empNumber = value;
+        }
+    }
 
     @PrePersist void onPrePersist() {
         if (isBlank(fileName)) {

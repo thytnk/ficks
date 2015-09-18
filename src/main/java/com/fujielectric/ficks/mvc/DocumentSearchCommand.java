@@ -114,19 +114,11 @@ public class DocumentSearchCommand {
         }
 
         if (keyword != null && !"".equals(keyword)) {
-            log.debug("keyword: {}", keyword.split("[\\s　]+"));
-            List<String> keywords = Arrays.asList(keyword.replaceAll(":"," ").split("[\\s　]+"));
+            log.debug("keyword: {}", keyword.split("[\\s　\\(\\)]+"));
+            List<String> keywords = Arrays.asList(keyword.replaceAll(":"," ").split("[\\s　\\(\\)]+"));
 //            criteria = criteria.and(new Criteria("text").expression(keyword.replaceAll(":"," ")));
             for (String s: keywords) {
-//                criteria = criteria.and(new Criteria("text").contains(s).or("doc_code").is(keyword));
                 criteria = criteria.and(new Criteria("text").expression(s));
-                /*
-                criteria = criteria.and(new Criteria("content").contains(keyword)
-                        .or("resourcename").contains(keyword)
-                        .or("doc_description").contains(keyword)
-                        .or("doc_customer_name").contains(keyword)
-                        .or("doc_author_name").contains(keyword)
-                        .or("doc_code").contains(keyword));*/
             }
         }
 

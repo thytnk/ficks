@@ -23,7 +23,7 @@ public class ThumbnailController {
 
     @RequestMapping(value="{code}.jpg", produces="image/jpeg")
     public void thumbnail(HttpServletResponse res, @PathVariable("code")String code) throws IOException {
-        log.info("thumbnail: {}", code);
+        log.debug("thumbnail: {}", code);
         Path path = thumbnailService.getThumbnailOf(code);
 
         res.reset();
