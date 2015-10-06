@@ -1,7 +1,15 @@
 package com.fujielectric.ficks.mvc;
 
+import com.fujielectric.ficks.domain.User;
+import com.fujielectric.ficks.domain.history.SearchHistory;
 import lombok.Data;
+import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.math.NumberUtils.*;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.solr.core.query.Criteria;
@@ -124,6 +132,32 @@ public class DocumentSearchCommand {
 
         log.debug("searchCriteria = {}", criteria);
         return criteria;
+    }
+
+    SearchHistory getSearchHistory(User user) {
+        SearchHistory history = new SearchHistory(user);
+        history.setCategory(join(category, ""));
+
+        history.setArea(isNumber(area) ? createInteger(area) : null);
+        history.setPurpose(isNumber(area) ? createInteger(purpose) : null);
+        history.setResult(isNumber(area) ? createInteger(result) : null);
+        history.setReason(isNumber(area) ? createInteger(reason) : null);
+        history.setCustomer(trim(customer));
+        history.setAuthor(trim(author));
+        history.setKeyword(trim(keyword));
+
+        try {
+            if (publishedFrom != null && !"".equals(publishedFrom)) {
+                history.setPublishedFrom(DateUtils.parseDate(publishedFrom, "yyyy/MM/dd"));
+            }
+
+            if (publishedTo != null && !"".equals(publishedTo)) {
+                history.setPublishedTo(DateUtils.parseDate(publishedTo, "yyyy/MM/dd"));
+            }
+        } catch (ParseException e) {
+            log.debug("publishedFrom/To parse failed");
+        }
+        return history;
     }
 
     @Override

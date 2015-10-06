@@ -29,7 +29,7 @@
     </div>
     <div class="col-sm-3">
       <div class="row small doc_thumbnail">
-        <a class="col-sm-12 download-link" href="/documents/" th:attrappend="href=${doc.code} + '/download'" title="ダウンロード">
+        <a class="col-sm-12 download-link" href="/documents/" th:attrappend="href=${doc.code} + '/download?ref=' + ${ref} + '&amp;refcount=' + ${refcount} + '&amp;refpage=' + ${list.number + 1}" title="ダウンロード">
           <img src="/thumbnail/" th:attrappend="src=${doc.code} + '.jpg'" alt="NO IMAGE" class="img-thumbnail"/>
           <p><span class="glyphicon glyphicon-download-alt"></span></p>
         </a>

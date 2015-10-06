@@ -13,8 +13,8 @@
   <div class="col-sm-10 col-xs-12">
     <div th:include="documents/pager :: pager"></div>
     <ul id="documents" class="list-group">
-      <li class="list-group-item row" th:each="doc : ${list.content}">
-        <div th:include="documents/list-item :: list-item"></div>
+      <li class="list-group-item row" th:each="doc, iterStat : ${list.content}">
+        <div th:include="documents/list-item :: list-item (ref='search', refcount=${iterStat.count})"></div>
       </li>
     </ul>
     <div th:include="documents/pager :: pager"

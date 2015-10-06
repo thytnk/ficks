@@ -2,9 +2,13 @@ package com.fujielectric.ficks.mvc;
 
 import com.fujielectric.ficks.config.GuiProperties;
 import com.fujielectric.ficks.domain.*;
+import com.fujielectric.ficks.domain.history.DownloadHistory;
+import com.fujielectric.ficks.domain.history.SearchHistory;
+import com.fujielectric.ficks.domain.history.HistoryRepository;
 import com.fujielectric.ficks.jpa.DocumentAccessRepository;
 import com.fujielectric.ficks.jpa.DocumentRepository;
 import com.fujielectric.ficks.solr.SolrDocumentRepository;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +57,9 @@ public class DocumentController extends WebMvcConfigurerAdapter {
     private DocumentService documentService;
 
     @Autowired
+    private HistoryRepository historyRepository;
+
+    @Autowired
     GuiProperties guiProperties;
 
     @ModelAttribute
@@ -83,7 +90,8 @@ public class DocumentController extends WebMvcConfigurerAdapter {
 
     @RequestMapping(value="search",method=GET)
     public String search(DocumentSearchCommand documentSearchCommand, Model model,
-                         @RequestParam(value="page", defaultValue="0") int page) {
+                         @RequestParam(value="page", defaultValue="0") int page,
+                         @AuthenticationPrincipal LoginUserDetails loginUserDetails) {
         log.info("search: {}", documentSearchCommand);
         FacetQuery query = new SimpleFacetQuery(documentSearchCommand.searchCriteria());
         query.setFacetOptions(new FacetOptions().addFacetOnField("doc_area").addFacetOnField("doc_purpose"));
@@ -93,29 +101,32 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         query.setPageRequest(new PageRequest(page, 10));
         FacetPage<Document> resultPage = solrTemplate.queryForFacetPage(query, Document.class);
 
+        saveSearchHistory(documentSearchCommand, page, loginUserDetails.getUser(), resultPage);
+
         Page<FacetFieldEntry> areaFacet = resultPage.getFacetResultPage("doc_area");
         model.addAttribute("areaFacet", areaFacet);
 
         Page<FacetFieldEntry> purposeFacet = resultPage.getFacetResultPage("doc_purpose");
         model.addAttribute("purposeFacet", purposeFacet);
 
-/*        for (Page<? extends FacetEntry> page : resultPage.getAllFacets()) {
-            page.
-            for (FacetEntry facetEntry : page.getContent()) {
-                facetEntry.
-                String categoryName = facetEntry.getValue();  // name of the category
-                long count = facetEntry.getValueCount();      // number of books in this category
-            }
-        }*/
         gui.addDropDowns(model);
-//        model.addAttribute("command", command);
         model.addAttribute("list", resultPage);
         model.addAttribute("mode", "search");
         return "documents";
     }
 
+    private void saveSearchHistory(DocumentSearchCommand documentSearchCommand, int page, User user, Page<Document> resultPage) {
+        SearchHistory history = documentSearchCommand.getSearchHistory(user);
+        history.setPage(page + 1);
+        history.setCount(resultPage.getTotalElements());
+        historyRepository.save(history);
+    }
+
     @RequestMapping(value="/{code}/download", produces="application/force-download")
     public void download(HttpServletResponse res, @PathVariable("code")String code,
+                         @RequestParam("ref") String referrer,
+                         @RequestParam("refcount") String refindex,
+                         @RequestParam("refpage") String refpage,
                          @AuthenticationPrincipal LoginUserDetails loginUserDetails) throws IOException {
         log.info("download: {}", code);
         Document doc = solrDocumentRepository.findByCode(code);
@@ -126,6 +137,7 @@ public class DocumentController extends WebMvcConfigurerAdapter {
 
         DocumentAccess documentAccess = new DocumentAccess(loginUserDetails.getUser(), doc);
         documentAccessRepository.save(documentAccess);
+        saveDownloadHistory(doc, referrer, refindex, refpage, loginUserDetails.getUser());
 
         Path path = documentService.getPathOf(code);
         String dFilename = new String(doc.getFileName().getBytes("Windows-31J"), "ISO-8859-1");
@@ -136,7 +148,6 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         OutputStream os = res.getOutputStream();
 
         InputStream in = Files.newInputStream(path);
-        //InputStream in = new FileInputStream(file);
 
         byte[] b = new byte[1024];
         int len;
@@ -145,6 +156,16 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         }
         in.close();
         os.close();
+    }
+
+    private void saveDownloadHistory(Document document,
+                                     String referrer, String refindex, String refpage,
+                                     User user) {
+        DownloadHistory history = new DownloadHistory(user, document);
+        history.setReferrer(referrer);
+        history.setReferrerPage(NumberUtils.isNumber(refpage) ? NumberUtils.createInteger(refpage) : null);
+        history.setReferrerIndex(NumberUtils.isNumber(refindex) ? NumberUtils.createInteger(refindex) : null);
+        historyRepository.save(history);
     }
 
     private Sort sortByRegisterDate() {

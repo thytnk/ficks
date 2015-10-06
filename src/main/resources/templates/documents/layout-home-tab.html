@@ -22,15 +22,15 @@
     <div class="tab-content">
       <div class="tab-pane fade in active" id="tab1">
         <ol id="newDocuments" class="list-group">
-          <li class="list-group-item row" th:each="doc : ${latestList.content}">
-            <div th:include="documents/list-item :: list-item"></div>
+          <li class="list-group-item row" th:each="doc,iterStat : ${latestList.content}">
+            <div th:include="documents/list-item :: list-item (ref='newest', refcount=${iterStat.count})"></div>
           </li>
         </ol>
       </div>
       <div class="tab-pane fade" id="tab2">
         <ol id="popularDocuments" class="list-group">
-          <li class="list-group-item row"  th:each="doc : ${mostAccessedList.content}">
-            <div th:include="documents/list-item :: list-item"></div>
+          <li class="list-group-item row"  th:each="doc,iterStat : ${mostAccessedList.content}">
+            <div th:include="documents/list-item :: list-item (ref='popular', refcount=${iterStat.count})"></div>
           </li>
         </ol>
       </div>
