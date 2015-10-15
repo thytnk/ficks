@@ -2,12 +2,11 @@ package com.fujielectric.ficks.mvc;
 
 import com.fujielectric.ficks.config.GuiProperties;
 import com.fujielectric.ficks.domain.*;
-import com.fujielectric.ficks.domain.history.DownloadHistory;
-import com.fujielectric.ficks.domain.history.SearchHistory;
-import com.fujielectric.ficks.domain.history.HistoryRepository;
-import com.fujielectric.ficks.jpa.DocumentAccessRepository;
+import com.fujielectric.ficks.domain.history.*;
+
 import com.fujielectric.ficks.jpa.DocumentRepository;
 import com.fujielectric.ficks.solr.SolrDocumentRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -43,9 +44,6 @@ public class DocumentController extends WebMvcConfigurerAdapter {
 
     @Autowired
     private DocumentRepository documentRepository;
-
-    @Autowired
-    private DocumentAccessRepository documentAccessRepository;
 
     @Autowired
     private SolrOperations solrTemplate;
@@ -70,6 +68,20 @@ public class DocumentController extends WebMvcConfigurerAdapter {
     @ModelAttribute
     User loginUser(@AuthenticationPrincipal LoginUserDetails loginUserDetails) {
         return loginUserDetails.getUser();
+    }
+
+    @ModelAttribute("recentSearchKeywords")
+    List<String> getRecentSearchKeywords(@AuthenticationPrincipal LoginUserDetails loginUserDetails) {
+        List<History> historyList = historyRepository.findByUserAndAction(loginUserDetails.getUser(), Action.SEARCH);
+
+        return historyList.stream()
+                .sorted((a, b) -> b.getAccessDate().compareTo(a.getAccessDate()))
+                .map(h -> (SearchHistory) h)
+                .map(h -> h.getKeyword())
+                .filter(s -> StringUtils.isNotBlank(s))
+                .distinct()
+                .limit(5)
+                .collect(Collectors.toList());
     }
 
     @RequestMapping(method=GET)
@@ -135,8 +147,6 @@ public class DocumentController extends WebMvcConfigurerAdapter {
             return;
         }
 
-        DocumentAccess documentAccess = new DocumentAccess(loginUserDetails.getUser(), doc);
-        documentAccessRepository.save(documentAccess);
         saveDownloadHistory(doc, referrer, refindex, refpage, loginUserDetails.getUser());
 
         Path path = documentService.getPathOf(code);

@@ -67,8 +67,13 @@
 
     <p class="col-sm-5 form-group">
       <label class="control-label" for="search_keyword">キーワード</label>
-      <input type="search" id="search_keyword" th:field="*{keyword}" class="form-control" autofocus="autofocus"/>
+      <input type="search" id="search_keyword" th:field="*{keyword}"
+             class="form-control" autofocus="autofocus"
+             autocomplete="on" list="keywords"/>
     </p>
+    <datalist id="keywords">
+      <option th:each="k : ${recentSearchKeywords}" th:value="${k}"/>
+    </datalist>
 
     <p class="col-sm-2 form-group">
       <label class="control-label">&nbsp;</label>
