@@ -122,8 +122,8 @@ public class DocumentSearchCommand {
         }
 
         if (keyword != null && !"".equals(keyword)) {
-            log.debug("keyword: {}", keyword.split("[\\s　\\(\\)]+"));
-            List<String> keywords = Arrays.asList(keyword.replaceAll(":"," ").split("[\\s　\\(\\)]+"));
+            log.debug("keyword: {}", keyword.trim().split("[\\s　\\(\\)]+"));
+            List<String> keywords = Arrays.asList(keyword.replaceAll(":", " ").replaceAll("　", " ").trim().split("[\\s\\(\\)]+"));
 //            criteria = criteria.and(new Criteria("text").expression(keyword.replaceAll(":"," ")));
             for (String s: keywords) {
                 criteria = criteria.and(new Criteria("text").expression(s));
@@ -139,9 +139,9 @@ public class DocumentSearchCommand {
         history.setCategory(join(category, ""));
 
         history.setArea(isNumber(area) ? createInteger(area) : null);
-        history.setPurpose(isNumber(area) ? createInteger(purpose) : null);
-        history.setResult(isNumber(area) ? createInteger(result) : null);
-        history.setReason(isNumber(area) ? createInteger(reason) : null);
+        history.setPurpose(isNumber(purpose) ? createInteger(purpose) : null);
+        history.setResult(isNumber(result) ? createInteger(result) : null);
+        history.setReason(isNumber(reason) ? createInteger(reason) : null);
         history.setCustomer(trim(customer));
         history.setAuthor(trim(author));
         history.setKeyword(trim(keyword));
