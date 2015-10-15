@@ -1,5 +1,6 @@
 package com.fujielectric.ficks.domain;
 
+import com.fujielectric.ficks.domain.history.DownloadHistory;
 import lombok.Data;
 import static org.apache.commons.lang3.StringUtils.leftPad;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -148,7 +149,7 @@ public class Document {
     private Date indexDate;
 
     @OneToMany(mappedBy = "document", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<DocumentAccess> accessList;
+    private List<DownloadHistory> accessList;
 
     public void setEmpNumber(String value) {
         if (value != null && value.length() == 5) {

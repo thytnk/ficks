@@ -16,8 +16,9 @@ public class History {
 
     @Id
     @Column(name="history_id")
-    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="document_access_id_seq")
-    @SequenceGenerator(name="document_access_id_seq", sequenceName = "document_access_document_access_id_seq")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "history_history_id_seq")
+    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="history_history_id_seq")
+    @SequenceGenerator(name="history_history_id_seq", sequenceName = "history_history_id_seq")
     private Long id;
 
     @ManyToOne

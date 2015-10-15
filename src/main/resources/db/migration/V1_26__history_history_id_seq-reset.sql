@@ -1,0 +1,1 @@
+SELECT SETVAL ('history_history_id_seq', (SELECT MAX(history_id) FROM history) + 1)

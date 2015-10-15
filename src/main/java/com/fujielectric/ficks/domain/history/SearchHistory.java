@@ -51,4 +51,9 @@ public class SearchHistory extends History {
     public SearchHistory(User user) {
         super(user, Action.SEARCH);
     }
+/*
+    @Override
+    public User getUser() { return super.getUser(); }
+    @Override
+    public void setUser(User val) { super.setUser(val); }*/
 }
