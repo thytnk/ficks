@@ -157,8 +157,9 @@
 
     <!-- catchall field, containing all other searchable text fields (implemented
           via copyField further on in this schema -->
-    <field name="text"   type="text_ja" indexed="true" stored="false" multiValued="true"/>
-     
+    <field name="text"     type="text_ja"  indexed="true" stored="false" multiValued="true"/>
+    <field name="text_cjk" type="text_cjk" indexed="true" stored="false" multiValued="true"/>
+
 
     <!-- catchall text field that indexes tokens both normally and in reverse for efficient
          leading wildcard queries. -->
@@ -203,39 +204,22 @@
       -->
     <uniqueKey>id</uniqueKey>
 
-    <!-- DEPRECATED: The defaultSearchField is consulted by various query parsers when
-     parsing a query string that isn't explicit about the field.  Machine (non-user)
-     generated queries are best made explicit, or they can use the "df" request parameter
-     which takes precedence over this.
-     Note: Un-commenting defaultSearchField will be insufficient if your request handler
-     in solrconfig.xml defines "df", which takes precedence. That would need to be removed.
-    <defaultSearchField>text</defaultSearchField> -->
-
-    <!-- DEPRECATED: The defaultOperator (AND|OR) is consulted by various query parsers
-     when parsing a query string to determine if a clause of the query should be marked as
-     required or optional, assuming the clause isn't already marked by some operator.
-     The default is OR, which is generally assumed so it is not a good idea to change it
-     globally here.  The "q.op" request parameter takes precedence over this.
-    <solrQueryParser defaultOperator="OR"/> -->
-
-
-    <!-- Text fields from SolrCell to search by default in our catch-all field 
-    <copyField source="title"        dest="text"/>
-    <copyField source="author"       dest="text"/>
-    <copyField source="description"  dest="text"/>
-    <copyField source="keywords"     dest="text"/>
-    
-    <copyField source="content_type" dest="text"/>
-    <copyField source="resourcename" dest="text"/>
-    <copyField source="url"          dest="text"/>-->
-
+    <!-- Text fields from SolrCell to search by default in our catch-all field  -->
     <copyField source="content"           dest="text"/>
     <copyField source="doc_code"          dest="text"/>
+    <copyField source="doc_file_name"     dest="text"/>
+    <copyField source="doc_dept_name"     dest="text"/>
     <copyField source="doc_author_name"   dest="text"/>
+    <copyField source="doc_emp_number"    dest="text"/>
     <copyField source="doc_customer_name" dest="text"/>
     <copyField source="doc_description"   dest="text"/>
-    <copyField source="resourcename"      dest="text"/>
-
+    <!--
+        <copyField source="content"           dest="text_cjk"/>
+        <copyField source="doc_file_name"     dest="text_cjk"/>
+        <copyField source="doc_author_name"   dest="text_cjk"/>
+        <copyField source="doc_customer_name" dest="text_cjk"/>
+        <copyField source="doc_description"   dest="text_cjk"/>
+    -->
     <!-- ページ数のフィールド統一
     <copyField source="page_count"    dest="doc_page_count"/>
     <copyField source="xmptpg_npages" dest="doc_page_count"/>-->
@@ -609,7 +593,7 @@
          parser config with <solrQueryParser defaultOperator="AND"/> further down in this file.  Use 
          OR if you would like to optimize for recall (default).
     -->
-    <fieldType name="text_ja" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="false">
+    <fieldType name="text_ja" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
         <analyzer>
             <!-- Kuromoji Japanese morphological analyzer/tokenizer (JapaneseTokenizer)
 

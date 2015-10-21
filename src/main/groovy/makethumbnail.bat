@@ -1,0 +1,1 @@
+groovy makethumbnail.groovy -Dgroovy.source.encoding=UTF-8

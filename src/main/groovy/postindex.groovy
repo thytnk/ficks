@@ -9,31 +9,56 @@ import groovy.sql.Sql
 
 @Slf4j
 class IndexAgent {
+    def sql
+
     def execute(options) {
-        log.info "-------------------- start output TSV --------------------"
-        def sql = Sql.newInstance(Config.DB_URL, Config.DB_USER, Config.DB_PASS, Config.DB_DRIVER)
-        sql.eachRow("select * from documents where index_date is null", {
-            def id = it.document_id
-            def code = it.code
+        log.info "-------------------- start update index --------------------"
+        
+        def query = (options.f) ?
+            "SELECT * FROM documents ORDER BY small_code" :
+            "SELECT * FROM documents WHERE indexed = false ORDER BY small_code";
 
-//            def command = "java -jar -Dauto -Dc=${Config.SOLR_CORE} -Dparams=\"literal.id=$code\" -Drecursive  post.jar ${Config.ROOT_DIR}\\$code"
-            def command = "java -jar -Dauto -Dc=${Config.SOLR_CORE} "
-            command += "-Dparams=\"literal.id=$id"
-            command += "&literal.doc_code=$code"
-            command += "&literal.doc_category=${it.category}"
-            command += "&literal.doc_purpose=${it.purpose}"
-//            command += "&literal.doc_dept_name=${encode(it.dept_name)}"
-            command += "\" -Drecursive  post.jar ${Config.ROOT_DIR}\\$code"            
-            log.info command
-
-            Process p = command.execute()
-            p.waitFor();
+        sql = Sql.newInstance(Config.DB_URL, Config.DB_USER, Config.DB_PASS, Config.DB_DRIVER)
+        sql.eachRow(query, {
+            indexFileOf it 
+            indexDataOf it
+            updateStatusOf it
         });
-        log.info "csv transformation completed."
+        log.info "-------------------- complete update index --------------------"
+    }
+
+    def indexFileOf(doc) {
+        def command = "java -jar -Dauto -Dc=${Config.SOLR_CORE} "
+        command += "-Dparams=\"literal.id=${doc.document_id}"
+        command += "&literal.doc_code=${doc.code}"
+        command += "&literal.doc_category=${doc.category}"
+        command += "&literal.doc_purpose=${doc.purpose}"
+        command += "\" -Drecursive  post.jar ${Config.ROOT_DIR}\\${doc.code}"            
+        log.info command
+
+        Process p = command.execute()
+        p.waitFor();
+    }
+
+    def indexDataOf(doc) {
+        def command = "curl --request POST ${Config.FICKS_API_ROOT}/documents/index/${doc.code}"
+        log.info command
+
+        Process p = command.execute()
+        p.waitFor();
+    }
+
+    def updateStatusOf(doc) {
+        sql.execute '''
+            UPDATE documents
+               SET index_date = CURRENT_DATE
+                 , indexed    = TRUE
+             WHERE code = ?
+            ''', [doc.code]
     }
 }
 
 def cli = new CliBuilder()
-//cli.d(longOpt:'debug', '処理成功時にファイル移動しない')
+cli.f(longOpt:'force', '全てのインデックスを再作成する')
 options = cli.parse(args)
 new IndexAgent().execute(options)
