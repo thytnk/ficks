@@ -27,7 +27,7 @@ public class User {
 
     private boolean disabled;
 
-
+/*
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Where(clause = "action='SEARCH'")
     private List<History> searchHistoryList;
@@ -42,5 +42,5 @@ public class User {
                 .distinct()
                 .limit(5)
                 .collect(Collectors.toList());
-    }
+    }*/
 }
