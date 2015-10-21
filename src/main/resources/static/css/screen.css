@@ -242,3 +242,8 @@ pre {
   background-color: #c9302c;
 }
 
+.new-document {
+  color: red;
+  font-size: 0.8em;
+  font-weight: bold;
+}

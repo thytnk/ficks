@@ -124,6 +124,7 @@ public class DocumentController extends WebMvcConfigurerAdapter {
         gui.addDropDowns(model);
         model.addAttribute("list", resultPage);
         model.addAttribute("mode", "search");
+        model.addAttribute("recentSearchKeywords", getRecentSearchKeywords(loginUserDetails));
         return "documents";
     }
 

@@ -13,8 +13,10 @@ import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -121,6 +123,11 @@ public class Document {
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern="yyyy/MM/dd")
     private Date registerDate;
+
+    @Transactional
+    public boolean isNewDocument() {
+        return registerDate.after(Date.from(ZonedDateTime.now().minusDays(7L).toInstant()));
+    }
 
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern="yyyy/MM/dd")

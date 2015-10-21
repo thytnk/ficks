@@ -5,10 +5,13 @@
     <div class="col-sm-9">
       <div class="row">
         <p class="col-sm-12">
+          <span title="新着文書" class="new-document"
+                  th:if="*{doc.newDocument}">NEW!</span>
           <label title="文書コード" th:text="*{doc.code}">Z99-99999-99:</label>
           <span title="ファイル名" th:text="*{doc.fileName}">FILENAME</span>
           <span title="アクセス数" class="badge"
                 th:if="*{doc.accessList != null and #lists.size(doc.accessList) > 0}" th:text="*{#lists.size(doc.accessList)}">0</span>
+
         </p>
       </div>
       <div class="row">
